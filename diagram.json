@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "author": "Kayeera Nathan (Group SE-24)",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "enterance_master_esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "board-esp32-devkit-c-v4", "id": "room_node_1_esp",      "top": 0, "left": 420, "attrs": {} },
+    { "type": "board-esp32-devkit-c-v4", "id": "room_node_2_esp",      "top": 0, "left": 840, "attrs": {} },
+    
+    { "type": "wokwi-servo", "id": "servo_entry", "top": 180, "left": -120, "attrs": {} },
+    { "type": "wokwi-servo", "id": "servo_exit",  "top": 260, "left": -120, "attrs": {} },
+    { "type": "wokwi-led",   "id": "led_green",   "top": 350, "left": -80,  "attrs": { "color": "green" } },
+    { "type": "wokwi-led",   "id": "led_red",     "top": 350, "left": -40,  "attrs": { "color": "red" } },
+    { "type": "wokwi-buzzer","id": "buzzer1",     "top": 400, "left": -80,  "attrs": {} },
+    
+    { "type": "wokwi-pir-motion-sensor", "id": "pir1", "top": 180, "left": 400, "attrs": {} },
+    { "type": "wokwi-photoresistor-sensor", "id": "ldr1", "top": 260, "left": 400, "attrs": {} },
+    { "type": "wokwi-relay-module", "id": "relay1", "top": 340, "left": 400, "attrs": {} },
+
+    { "type": "wokwi-pir-motion-sensor", "id": "pir2", "top": 180, "left": 820, "attrs": {} },
+    { "type": "wokwi-photoresistor-sensor", "id": "ldr2", "top": 260, "left": 820, "attrs": {} },
+    { "type": "wokwi-relay-module", "id": "relay2", "top": 340, "left": 820, "attrs": {} }
+  ],
+  "connections": [
+    [ "enterance_master_esp:13", "servo_entry:PWM", "orange", [ "v0" ] ],
+    [ "enterance_master_esp:15", "servo_exit:PWM",  "orange", [ "v0" ] ],
+    [ "enterance_master_esp:2",  "led_green:A",     "green",  [ "v0" ] ],
+    [ "enterance_master_esp:4",  "led_red:A",       "red",    [ "v0" ] ],
+    [ "enterance_master_esp:12", "buzzer1:1",       "purple", [ "v0" ] ],
+    
+    [ "room_node_1_esp:14",      "pir1:OUT",        "blue",   [ "v0" ] ],
+    [ "room_node_1_esp:34",      "ldr1:AO",         "gold",   [ "v0" ] ],
+    [ "room_node_1_esp:12",      "relay1:IN",       "green",  [ "v0" ] ],
+
+    [ "room_node_2_esp:14",      "pir2:OUT",        "blue",   [ "v0" ] ],
+    [ "room_node_2_esp:34",      "ldr2:AO",         "gold",   [ "v0" ] ],
+    [ "room_node_2_esp:12",      "relay2:IN",       "green",  [ "v0" ] ]
+  ]
+}

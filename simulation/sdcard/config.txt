@@ -1,0 +1,6 @@
+schedule_start=07:00
+schedule_end=20:00
+lockout_attempts=3
+lockout_duration_sec=60
+no_motion_timeout_sec=30
+heartbeat_interval_sec=2

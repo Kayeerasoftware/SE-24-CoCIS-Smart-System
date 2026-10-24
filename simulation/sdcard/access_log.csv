@@ -1,0 +1,2 @@
+timestamp,tag_id,user_name,direction,decision,reason
+2026-10-24 08:00:00,SYSTEM,Admin,BOOT,SUCCESS,System Initialized

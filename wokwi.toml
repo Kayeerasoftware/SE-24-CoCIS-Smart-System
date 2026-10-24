@@ -1,0 +1,20 @@
+[wokwi]
+version = 1
+diagram = "diagram.json"
+firmware = ".pio/build/ENTERANCE_MASTER/firmware.bin"
+elf = ".pio/build/ENTERANCE_MASTER/firmware.elf"
+
+[[wokwi.chips]]
+id = "enterance_master_esp"
+firmware = ".pio/build/ENTERANCE_MASTER/firmware.bin"
+elf = ".pio/build/ENTERANCE_MASTER/firmware.elf"
+
+[[wokwi.chips]]
+id = "room_node_1_esp"
+firmware = ".pio/build/ROOM_NODE_1/firmware.bin"
+elf = ".pio/build/ROOM_NODE_1/firmware.elf"
+
+[[wokwi.chips]]
+id = "room_node_2_esp"
+firmware = ".pio/build/ROOM_NODE_2/firmware.bin"
+elf = ".pio/build/ROOM_NODE_2/firmware.elf"
