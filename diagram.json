@@ -3,37 +3,212 @@
   "author": "Kayeera Nathan (Group SE-24)",
   "editor": "wokwi",
   "parts": [
-    { "type": "board-esp32-devkit-c-v4", "id": "enterance_master_esp", "top": 0, "left": 0, "attrs": {} },
-    { "type": "board-esp32-devkit-c-v4", "id": "room_node_1_esp",      "top": 0, "left": 420, "attrs": {} },
-    { "type": "board-esp32-devkit-c-v4", "id": "room_node_2_esp",      "top": 0, "left": 840, "attrs": {} },
-    
-    { "type": "wokwi-servo", "id": "servo_entry", "top": 180, "left": -120, "attrs": {} },
-    { "type": "wokwi-servo", "id": "servo_exit",  "top": 260, "left": -120, "attrs": {} },
-    { "type": "wokwi-led",   "id": "led_green",   "top": 350, "left": -80,  "attrs": { "color": "green" } },
-    { "type": "wokwi-led",   "id": "led_red",     "top": 350, "left": -40,  "attrs": { "color": "red" } },
-    { "type": "wokwi-buzzer","id": "buzzer1",     "top": 400, "left": -80,  "attrs": {} },
-    
-    { "type": "wokwi-pir-motion-sensor", "id": "pir1", "top": 180, "left": 400, "attrs": {} },
-    { "type": "wokwi-photoresistor-sensor", "id": "ldr1", "top": 260, "left": 400, "attrs": {} },
-    { "type": "wokwi-relay-module", "id": "relay1", "top": 340, "left": 400, "attrs": {} },
-
-    { "type": "wokwi-pir-motion-sensor", "id": "pir2", "top": 180, "left": 820, "attrs": {} },
-    { "type": "wokwi-photoresistor-sensor", "id": "ldr2", "top": 260, "left": 820, "attrs": {} },
-    { "type": "wokwi-relay-module", "id": "relay2", "top": 340, "left": 820, "attrs": {} }
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "enterance_master_esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "room_node_1_esp",
+      "top": 0,
+      "left": 542.44,
+      "attrs": {}
+    },
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "room_node_2_esp",
+      "top": 19.2,
+      "left": 1012.84,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "servo_entry",
+      "top": 169,
+      "left": -325.4,
+      "rotate": 90,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-servo",
+      "id": "servo_exit",
+      "top": 169,
+      "left": -219.8,
+      "rotate": 90,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_green",
+      "top": 73.2,
+      "left": -217,
+      "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_red",
+      "top": 82.8,
+      "left": -111.4,
+      "attrs": { "color": "red" }
+    },
+    { "type": "wokwi-buzzer", "id": "buzzer1", "top": 69.6, "left": -334.2, "attrs": {} },
+    { "type": "wokwi-pir-motion-sensor", "id": "pir1", "top": -34.4, "left": 347.82, "attrs": {} },
+    {
+      "type": "wokwi-photoresistor-sensor",
+      "id": "ldr1",
+      "top": 137.6,
+      "left": 288.8,
+      "attrs": {}
+    },
+    { "type": "wokwi-relay-module", "id": "relay1", "top": 221, "left": 316.8, "attrs": {} },
+    { "type": "wokwi-pir-motion-sensor", "id": "pir2", "top": -24.8, "left": 847.02, "attrs": {} },
+    { "type": "wokwi-photoresistor-sensor", "id": "ldr2", "top": 128, "left": 759.2, "attrs": {} },
+    { "type": "wokwi-relay-module", "id": "relay2", "top": 211.4, "left": 787.2, "attrs": {} },
+    { "type": "wokwi-microsd-card", "id": "sd1", "top": 345.83, "left": 38.47, "attrs": {} },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": 390.2,
+      "left": -240,
+      "attrs": { "color": "green", "xray": "1" }
+    },
+    { "type": "board-mfrc522", "id": "rfid1", "top": 333.35, "left": -505.36, "attrs": {} },
+    { "type": "board-mfrc522", "id": "rfid2", "top": -252.25, "left": -466.96, "attrs": {} },
+    { "type": "wokwi-led", "id": "led1", "top": 15.6, "left": 282.2, "attrs": { "color": "red" } },
+    {
+      "type": "wokwi-led",
+      "id": "led2",
+      "top": -22.8,
+      "left": 752.6,
+      "attrs": { "color": "red" }
+    },
+    { "type": "wokwi-led", "id": "led3", "top": 54, "left": 762.2, "attrs": { "color": "red" } },
+    { "type": "wokwi-led", "id": "led4", "top": 73.2, "left": 291.8, "attrs": { "color": "red" } },
+    {
+      "type": "wokwi-led",
+      "id": "led5",
+      "top": 284.4,
+      "left": 531.8,
+      "attrs": { "color": "blue" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led6",
+      "top": 284.4,
+      "left": 1050.2,
+      "attrs": { "color": "blue" }
+    }
   ],
   "connections": [
-    [ "enterance_master_esp:13", "servo_entry:PWM", "orange", [ "v0" ] ],
-    [ "enterance_master_esp:15", "servo_exit:PWM",  "orange", [ "v0" ] ],
-    [ "enterance_master_esp:2",  "led_green:A",     "green",  [ "v0" ] ],
-    [ "enterance_master_esp:4",  "led_red:A",       "red",    [ "v0" ] ],
-    [ "enterance_master_esp:12", "buzzer1:1",       "purple", [ "v0" ] ],
-    
-    [ "room_node_1_esp:14",      "pir1:OUT",        "blue",   [ "v0" ] ],
-    [ "room_node_1_esp:34",      "ldr1:AO",         "gold",   [ "v0" ] ],
-    [ "room_node_1_esp:12",      "relay1:IN",       "green",  [ "v0" ] ],
-
-    [ "room_node_2_esp:14",      "pir2:OUT",        "blue",   [ "v0" ] ],
-    [ "room_node_2_esp:34",      "ldr2:AO",         "gold",   [ "v0" ] ],
-    [ "room_node_2_esp:12",      "relay2:IN",       "green",  [ "v0" ] ]
-  ]
+    [ "enterance_master_esp:13", "servo_entry:PWM", "orange", [ "h-43.01", "v-96", "h-211" ] ],
+    [ "enterance_master_esp:5V", "servo_entry:V+", "red", [ "v20", "h-280" ] ],
+    [ "enterance_master_esp:GND.1", "servo_entry:GND", "black", [ "v30", "h-300" ] ],
+    [
+      "enterance_master_esp:15",
+      "servo_exit:PWM",
+      "orange",
+      [ "h33.64", "v48", "h-192", "v-134.4", "h-86.2" ]
+    ],
+    [ "enterance_master_esp:5V", "servo_exit:V+", "red", [ "v20", "h-180" ] ],
+    [ "enterance_master_esp:GND.1", "servo_exit:GND", "black", [ "v30", "h-200" ] ],
+    [
+      "enterance_master_esp:2",
+      "led_green:A",
+      "green",
+      [ "h52.84", "v76.8", "h-201.6", "v-163.2", "h-86.4", "v48", "h-57.6" ]
+    ],
+    [ "led_green:C", "enterance_master_esp:GND.1", "black", [ "v20", "h150" ] ],
+    [
+      "enterance_master_esp:4",
+      "led_red:A",
+      "red",
+      [ "h72.04", "v115.2", "h-201.6", "v-163.2", "h-38.4", "v38.4", "h-19.2" ]
+    ],
+    [ "led_red:C", "enterance_master_esp:GND.1", "black", [ "v20", "h50" ] ],
+    [
+      "enterance_master_esp:12",
+      "buzzer1:1",
+      "purple",
+      [ "h-23.81", "v-86.4", "h-336", "v124.8", "h48" ]
+    ],
+    [ "buzzer1:2", "enterance_master_esp:GND.1", "black", [ "v40", "h260" ] ],
+    [ "enterance_master_esp:32", "btn1:1.l", "darkgreen", [ "v50", "h-180" ] ],
+    [ "btn1:2.l", "enterance_master_esp:GND.1", "black", [ "v20", "h180" ] ],
+    [ "enterance_master_esp:21", "rfid1:SDA", "gold", [ "v60", "h-638.36", "v237.6" ] ],
+    [ "enterance_master_esp:18", "rfid1:SCK", "gray", [ "v70", "h-647.96", "v208.4" ] ],
+    [ "enterance_master_esp:23", "rfid1:MOSI", "cyan", [ "v80", "h-657.56", "v275.2" ] ],
+    [ "enterance_master_esp:19", "rfid1:MISO", "yellow", [ "v90", "h-667.16", "v217.2" ] ],
+    [ "enterance_master_esp:22", "rfid1:RST", "blue", [ "v100", "h-686.36", "v284" ] ],
+    [ "enterance_master_esp:3V3", "rfid1:3.3V", "red", [ "v110", "h-599.81", "v302.8" ] ],
+    [ "enterance_master_esp:GND.1", "rfid1:GND", "black", [ "v120", "h-580.61", "v148.8" ] ],
+    [ "enterance_master_esp:5", "rfid2:SDA", "gold", [ "h72.04", "v-182.4", "h-710.4", "v-144" ] ],
+    [
+      "enterance_master_esp:18",
+      "rfid2:SCK",
+      "gray",
+      [ "h62.44", "v-153.6", "h-720", "v-153.6" ]
+    ],
+    [
+      "enterance_master_esp:23",
+      "rfid2:MOSI",
+      "cyan",
+      [ "h43.24", "v-67.2", "h-710.4", "v-163.2" ]
+    ],
+    [
+      "enterance_master_esp:19",
+      "rfid2:MISO",
+      "yellow",
+      [ "h52.84", "v-105.6", "h-262.84", "h-466.76", "v-172.8" ]
+    ],
+    [ "enterance_master_esp:22", "rfid2:RST", "blue", [ "h24.04", "v-28.8", "h-720", "v-172.8" ] ],
+    [ "enterance_master_esp:3V3", "rfid2:3.3V", "red", [ "h-609.41", "v-172.8" ] ],
+    [
+      "enterance_master_esp:GND.2",
+      "rfid2:GND",
+      "black",
+      [ "h33.64", "v-28.8", "h-720", "v-163.2" ]
+    ],
+    [ "enterance_master_esp:27", "sd1:CS", "green", [ "v50", "h187.39", "v237.94" ] ],
+    [ "enterance_master_esp:23", "sd1:DI", "cyan", [ "h14.44", "v38.4", "h67.2", "v326.49" ] ],
+    [ "enterance_master_esp:19", "sd1:DO", "yellow", [ "v70", "h43.24", "v198.69" ] ],
+    [ "enterance_master_esp:18", "sd1:SCK", "gray", [ "v80", "h33.64", "v198.41" ] ],
+    [ "enterance_master_esp:3V3", "sd1:VCC", "red", [ "v90", "h158.59", "v274.66" ] ],
+    [ "enterance_master_esp:GND.1", "sd1:GND", "black", [ "v100", "h148.99", "v120.69" ] ],
+    [ "room_node_1_esp:14", "pir1:OUT", "blue", [ "h-38.25", "v-28.8", "h-115.06" ] ],
+    [ "room_node_1_esp:5V", "pir1:VCC", "red", [ "v-40", "h-140" ] ],
+    [ "room_node_1_esp:GND.1", "pir1:GND", "black", [ "v-50", "h-160" ] ],
+    [ "room_node_1_esp:34", "ldr1:AO", "gold", [ "h-57.45", "v115.9" ] ],
+    [ "room_node_1_esp:3V3", "ldr1:VCC", "red", [ "v40", "h-180" ] ],
+    [ "room_node_1_esp:GND.1", "ldr1:GND", "black", [ "v50", "h-190" ] ],
+    [ "room_node_1_esp:12", "relay1:IN", "green", [ "h-38.25", "v163.2", "h-220.8", "v-47.8" ] ],
+    [ "room_node_1_esp:5V", "relay1:VCC", "red", [ "v60", "h-180" ] ],
+    [ "room_node_1_esp:GND.2", "relay1:GND", "black", [ "v70", "h-180" ] ],
+    [ "room_node_1_esp:5V", "relay1:COM", "red", [ "v80", "h-160" ] ],
+    [ "relay1:NO", "led1:A", "orange", [ "v-80", "h-20" ] ],
+    [ "led1:C", "room_node_1_esp:GND.1", "black", [ "v20", "h200" ] ],
+    [ "relay1:NO", "led4:A", "orange", [ "v-60", "h-10" ] ],
+    [ "led4:C", "room_node_1_esp:GND.1", "black", [ "v20", "h190" ] ],
+    [ "room_node_1_esp:2", "led5:A", "blue", [ "v40", "h-57.6", "v132.8", "h-28.8" ] ],
+    [ "led5:C", "room_node_1_esp:GND.1", "black", [ "v30", "h-18.8", "v-202.8" ] ],
+    [ "room_node_2_esp:14", "pir2:OUT", "blue", [ "h-28.65", "v-57.6", "h-95.86" ] ],
+    [ "room_node_2_esp:5V", "pir2:VCC", "red", [ "v-40", "h-120" ] ],
+    [ "room_node_2_esp:GND.1", "pir2:GND", "black", [ "v-50", "h-140" ] ],
+    [ "room_node_2_esp:34", "ldr2:AO", "gold", [ "h-38.25", "v87.1" ] ],
+    [ "room_node_2_esp:3V3", "ldr2:VCC", "red", [ "v40", "h-180" ] ],
+    [ "room_node_2_esp:GND.1", "ldr2:GND", "black", [ "v50", "h-190" ] ],
+    [ "room_node_2_esp:12", "relay2:IN", "green", [ "h-28.61", "v144", "h-211.2", "v-47.8" ] ],
+    [ "room_node_2_esp:5V", "relay2:VCC", "red", [ "v60", "h-180" ] ],
+    [ "room_node_2_esp:GND.2", "relay2:GND", "black", [ "v70", "h-180" ] ],
+    [ "room_node_2_esp:5V", "relay2:COM", "red", [ "v80", "h-160" ] ],
+    [ "relay2:NO", "led2:A", "orange", [ "v-80", "h-20" ] ],
+    [ "led2:C", "room_node_2_esp:GND.1", "black", [ "v20", "h200" ] ],
+    [ "relay2:NO", "led3:A", "orange", [ "v-60", "h-10" ] ],
+    [ "led3:C", "room_node_2_esp:GND.1", "black", [ "v20", "h190" ] ],
+    [ "room_node_2_esp:2", "led6:A", "blue", [ "h19.2", "v153.6", "h-57.6" ] ],
+    [ "led6:C", "room_node_2_esp:GND.1", "black", [ "v30", "h-20" ] ]
+  ],
+  "dependencies": {}
 }
