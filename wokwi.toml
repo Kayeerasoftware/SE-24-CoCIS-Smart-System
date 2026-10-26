@@ -7,18 +7,9 @@
 version = 1
 diagram = "diagram.json"
 
-# Active Primary Target: ENTERANCE_MASTER (Entrance Master Gateway & Terminal)
-# To simulate Room 1 or Room 2, switch active firmware/elf paths below:
+# Wokwi runs one firmware image per project; select the node to simulate here.
 firmware = ".pio/build/ENTERANCE_MASTER/firmware.bin"
 elf = ".pio/build/ENTERANCE_MASTER/firmware.elf"
-
-# For ROOM_NODE_1:
-# firmware = ".pio/build/ROOM_NODE_1/firmware.bin"
-# elf = ".pio/build/ROOM_NODE_1/firmware.elf"
-
-# For ROOM_NODE_2:
-# firmware = ".pio/build/ROOM_NODE_2/firmware.bin"
-# elf = ".pio/build/ROOM_NODE_2/firmware.elf"
 
 # GDB Debugging Server Port
 gdbServerPort = 3333
@@ -31,21 +22,3 @@ gdbServerPort = 3333
 part = "sd1"
 folder = "simulation/sdcard"
 writeback = true
-
-# ------------------------------------------------------------------------------
-# Multi-Node Reference Mappings (from Project Architecture Blueprint)
-# ------------------------------------------------------------------------------
-[[wokwi.chips]]
-id = "enterance_master_esp"
-firmware = ".pio/build/ENTERANCE_MASTER/firmware.bin"
-elf = ".pio/build/ENTERANCE_MASTER/firmware.elf"
-
-[[wokwi.chips]]
-id = "room_node_1_esp"
-firmware = ".pio/build/ROOM_NODE_1/firmware.bin"
-elf = ".pio/build/ROOM_NODE_1/firmware.elf"
-
-[[wokwi.chips]]
-id = "room_node_2_esp"
-firmware = ".pio/build/ROOM_NODE_2/firmware.bin"
-elf = ".pio/build/ROOM_NODE_2/firmware.elf"
