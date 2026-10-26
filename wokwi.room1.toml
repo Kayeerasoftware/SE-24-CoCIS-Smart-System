@@ -1,0 +1,12 @@
+[wokwi]
+version = 1
+diagram = "diagram.json"
+firmware = ".pio/build/ROOM_NODE_1/firmware.bin"
+elf = ".pio/build/ROOM_NODE_1/firmware.elf"
+gdbServerPort = 3334
+
+[[sdcard]]
+part = "sd1"
+folder = "simulation/sdcard"
+writeback = false
+

@@ -1,0 +1,124 @@
+/*
+ * ====================================================================
+ * CoCIS Smart System - Room Node 2 Wireless ESP-NOW Telemetry Sender
+ * Component: esp_now_sender.c
+ * Owner: Zziwa Mark Alex & Kayeera Nathan - Group SE-24
+ * ====================================================================
+ */
+
+#include "esp_now_sender.h"
+#include <stdio.h>
+#include <string.h>
+#include "esp_log.h"
+#include "esp_wifi.h"
+#include "esp_now.h"
+#include "driver/gpio.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "protocol.h"
+#include "config_defaults.h"
+#include "mac_address_map.h"
+#include "motion_sensor.h"
+#include "light_sensor.h"
+#include "light_relay.h"
+
+static const char *TAG = "ESP_NOW_SENDER_2";
+
+static uint8_t s_room_id = 2;
+static uint8_t s_packet_seq = 0;
+
+static void on_packet_recv(const esp_now_recv_info_t *info, const uint8_t *data, int len) {
+    if (len == sizeof(esp_now_packet_t)) {
+        esp_now_packet_t pkt;
+        memcpy(&pkt, data, sizeof(esp_now_packet_t));
+
+        if (!validate_packet(&pkt)) return;
+
+        if (pkt.msg_type == MSG_TYPE_EMERGENCY_ALERT && pkt.payload_len >= sizeof(emergency_alert_payload_t)) {
+            emergency_alert_payload_t alert;
+            memcpy(&alert, pkt.payload, sizeof(emergency_alert_payload_t));
+            light_relay_set_emergency(alert.emergency_active != 0);
+        } else if (pkt.msg_type == MSG_TYPE_LIGHT_OVERRIDE && pkt.payload_len >= sizeof(light_override_payload_t)) {
+            light_override_payload_t override_cmd;
+            memcpy(&override_cmd, pkt.payload, sizeof(light_override_payload_t));
+            if (override_cmd.target_room == 0 || override_cmd.target_room == s_room_id) {
+                light_relay_set_override(override_cmd.override_mode);
+            }
+        }
+    }
+}
+
+void esp_now_sender_init(uint8_t room_id, const uint8_t *my_mac) {
+    s_room_id = room_id;
+    ESP_LOGI(TAG, "Initializing Wireless ESP-NOW Sender for Room %d...", room_id);
+
+    gpio_set_direction(PIN_STATUS_LED, GPIO_MODE_OUTPUT);
+    gpio_set_level(PIN_STATUS_LED, 0);
+
+    esp_netif_init();
+    esp_event_loop_create_default();
+    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
+    esp_wifi_init(&cfg);
+    esp_wifi_set_storage(WIFI_STORAGE_RAM);
+    esp_wifi_set_mode(WIFI_MODE_STA);
+
+    if (my_mac) {
+        esp_wifi_set_mac(WIFI_IF_STA, my_mac);
+    }
+    esp_wifi_start();
+
+    ESP_ERROR_CHECK(esp_now_init());
+    ESP_ERROR_CHECK(esp_now_register_recv_cb(on_packet_recv));
+
+    esp_now_peer_info_t master_peer = {0};
+    memcpy(master_peer.peer_addr, MAC_ENTERANCE_MASTER, 6);
+    master_peer.channel = 0;
+    master_peer.encrypt = false;
+    esp_now_add_peer(&master_peer);
+
+    ESP_LOGI(TAG, "Room %d active on MAC 24:0A:C4:00:03:00.", room_id);
+}
+
+void esp_now_telemetry_task(void *pvParameters) {
+    esp_now_packet_t pkt;
+    memset(&pkt, 0, sizeof(pkt));
+    pkt.magic = ESP_NOW_PAYLOAD_MAGIC;
+    pkt.sender_id = NODE_ROOM_2;
+    pkt.target_id = NODE_ENTERANCE_MASTER;
+    pkt.msg_type = MSG_TYPE_ROOM_STATUS;
+    pkt.payload_len = sizeof(room_status_payload_t);
+
+    while (1) {
+        motion_sensor_tick_1s();
+        light_relay_tick_1s();
+
+        static int s_tick = 0;
+        s_tick++;
+
+        if (s_tick >= HEARTBEAT_INTERVAL_SEC) {
+            s_tick = 0;
+
+            room_status_payload_t status = {
+                .occupied        = motion_sensor_is_occupied() ? 1 : 0,
+                .lights_on       = light_relay_is_on() ? 1 : 0,
+                .light_level_lux = light_sensor_read_lux(),
+                .seconds_active  = light_relay_get_energy_saved_sec()
+            };
+
+            pkt.msg_id = s_packet_seq++;
+            memcpy(pkt.payload, &status, sizeof(status));
+            pkt.checksum = calculate_checksum(&pkt);
+
+            esp_now_send(MAC_ENTERANCE_MASTER, (uint8_t *)&pkt, sizeof(pkt));
+
+            gpio_set_level(PIN_STATUS_LED, 1);
+            vTaskDelay(pdMS_TO_TICKS(100));
+            gpio_set_level(PIN_STATUS_LED, 0);
+
+            vTaskDelay(pdMS_TO_TICKS(900));
+        } else {
+            vTaskDelay(pdMS_TO_TICKS(1000));
+        }
+    }
+}
+

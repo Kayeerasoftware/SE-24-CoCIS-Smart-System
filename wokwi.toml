@@ -1,9 +1,40 @@
+# ==============================================================================
+# Wokwi Simulation Configuration for SE-24 CoCIS Smart System
+# Makerere University | College of Computing & Information Sciences
+# ==============================================================================
+
 [wokwi]
 version = 1
 diagram = "diagram.json"
+
+# Active Primary Target: ENTERANCE_MASTER (Entrance Master Gateway & Terminal)
+# To simulate Room 1 or Room 2, switch active firmware/elf paths below:
 firmware = ".pio/build/ENTERANCE_MASTER/firmware.bin"
 elf = ".pio/build/ENTERANCE_MASTER/firmware.elf"
 
+# For ROOM_NODE_1:
+# firmware = ".pio/build/ROOM_NODE_1/firmware.bin"
+# elf = ".pio/build/ROOM_NODE_1/firmware.elf"
+
+# For ROOM_NODE_2:
+# firmware = ".pio/build/ROOM_NODE_2/firmware.bin"
+# elf = ".pio/build/ROOM_NODE_2/firmware.elf"
+
+# GDB Debugging Server Port
+gdbServerPort = 3333
+
+# ------------------------------------------------------------------------------
+# Virtual MicroSD Card Configuration
+# Mounts simulation/sdcard (users.csv, access_log.csv, config.txt, occupancy.csv)
+# ------------------------------------------------------------------------------
+[[sdcard]]
+part = "sd1"
+folder = "simulation/sdcard"
+writeback = true
+
+# ------------------------------------------------------------------------------
+# Multi-Node Reference Mappings (from Project Architecture Blueprint)
+# ------------------------------------------------------------------------------
 [[wokwi.chips]]
 id = "enterance_master_esp"
 firmware = ".pio/build/ENTERANCE_MASTER/firmware.bin"

@@ -3,6 +3,7 @@
  * CoCIS Smart Control and Monitoring System - ROOM_NODE_2
  * Node: ROOM_NODE_2 (Lecture Room 2 Controller - ESP32 #3)
  * Owner: Zziwa Mark Alex (24/U/11978/EVE) - Group SE-24
+ * Integrator: Kayeera Nathan (24/U/25913/EVE)
  * ====================================================================
  */
 
@@ -12,100 +13,44 @@
 #include "freertos/task.h"
 #include "esp_log.h"
 #include "nvs_flash.h"
-#include "esp_wifi.h"
-#include "esp_now.h"
-#include "driver/gpio.h"
 
 #include "protocol.h"
 #include "config_defaults.h"
 #include "mac_address_map.h"
+#include "motion_sensor.h"
+#include "light_sensor.h"
+#include "light_relay.h"
+#include "esp_now_sender.h"
 
 static const char *TAG = "ROOM_NODE_2";
 
-static uint8_t g_occupied = 0;
-static uint8_t g_lights_on = 0;
-static uint16_t g_lux = 180;
-static uint32_t g_energy_saved_sec = 0;
-
-void init_room_hardware(void);
-void init_esp_now_sender(void);
-void telemetry_task(void *pvParameters);
-
 void app_main(void) {
-    ESP_LOGI(TAG, "Starting ROOM_NODE_2 (Lecture Room 2)...");
+    ESP_LOGI(TAG, "=================================================================");
+    ESP_LOGI(TAG, "Starting ROOM_NODE_2 (Lecture Room 2 Controller)...");
+    ESP_LOGI(TAG, "=================================================================");
 
-    nvs_flash_init();
-    init_room_hardware();
-    init_esp_now_sender();
-
-    xTaskCreate(telemetry_task, "TelemetryTask", 3072, NULL, 3, NULL);
-    ESP_LOGI(TAG, "ROOM_NODE_2 operational.");
-}
-
-void init_room_hardware(void) {
-    gpio_set_direction(PIN_PIR_MOTION, GPIO_MODE_INPUT);
-    gpio_set_direction(PIN_LIGHT_RELAY, GPIO_MODE_OUTPUT);
-    gpio_set_direction(PIN_STATUS_LED, GPIO_MODE_OUTPUT);
-
-    gpio_set_level(PIN_LIGHT_RELAY, 0);
-    gpio_set_level(PIN_STATUS_LED, 0);
-}
-
-static void on_data_recv(const esp_now_recv_info_t *info, const uint8_t *data, int len) {
-    if (len == sizeof(esp_now_packet_t)) {
-        esp_now_packet_t pkt;
-        memcpy(&pkt, data, sizeof(esp_now_packet_t));
-        if (pkt.msg_type == MSG_TYPE_EMERGENCY_ALERT) {
-            ESP_LOGW(TAG, "EMERGENCY BROADCAST RECEIVED! Forcing lights ON.");
-            gpio_set_level(PIN_LIGHT_RELAY, 1);
-            g_lights_on = 1;
-        }
+    // 1. Initialize NVS (Required for Wi-Fi / ESP-NOW)
+    esp_err_t ret = nvs_flash_init();
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        ret = nvs_flash_init();
     }
-}
+    ESP_ERROR_CHECK(ret);
 
-void init_esp_now_sender(void) {
-    esp_netif_init();
-    esp_event_loop_create_default();
-    wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
-    esp_wifi_init(&cfg);
-    esp_wifi_set_mode(WIFI_MODE_STA);
-    esp_wifi_start();
+    // 2. Initialize PIR Motion Sensor (GPIO 14)
+    motion_sensor_init();
 
-    esp_now_init();
-    esp_now_register_recv_cb(on_data_recv);
+    // 3. Initialize Ambient LDR Light Sensor (ADC1_CH6 / GPIO 34)
+    light_sensor_init();
 
-    esp_now_peer_info_t master_peer = {0};
-    memcpy(master_peer.peer_addr, MAC_ENTERANCE_MASTER, 6);
-    master_peer.channel = 0;
-    master_peer.encrypt = false;
-    esp_now_add_peer(&master_peer);
-}
+    // 4. Initialize Lighting Relay (GPIO 12) with Daylight-Aware Energy Saving
+    light_relay_init();
 
-void telemetry_task(void *pvParameters) {
-    esp_now_packet_t pkt;
-    pkt.magic = ESP_NOW_PAYLOAD_MAGIC;
-    pkt.sender_id = NODE_ROOM_2;
-    pkt.target_id = NODE_ENTERANCE_MASTER;
-    pkt.msg_type = MSG_TYPE_ROOM_STATUS;
-    pkt.payload_len = sizeof(room_status_payload_t);
+    // 5. Initialize Wireless ESP-NOW Sender with Room 2 MAC (24:0A:C4:00:03:00)
+    esp_now_sender_init(2, MAC_ROOM_NODE_2);
 
-    uint8_t seq = 0;
-    while (1) {
-        room_status_payload_t status = {
-            .occupied = g_occupied,
-            .lights_on = g_lights_on,
-            .light_level_lux = g_lux,
-            .seconds_active = g_energy_saved_sec
-        };
-        memcpy(pkt.payload, &status, sizeof(room_status_payload_t));
-        pkt.msg_id = seq++;
-        pkt.checksum = calculate_checksum(&pkt);
+    // 6. Spawn Periodic Sensor Loop and Wireless Telemetry Task
+    xTaskCreate(esp_now_telemetry_task, "TelemetryTask", 4096, NULL, 3, NULL);
 
-        esp_now_send(MAC_ENTERANCE_MASTER, (uint8_t *)&pkt, sizeof(esp_now_packet_t));
-        gpio_set_level(PIN_STATUS_LED, 1);
-        vTaskDelay(pdMS_TO_TICKS(100));
-        gpio_set_level(PIN_STATUS_LED, 0);
-
-        vTaskDelay(pdMS_TO_TICKS(1900));
-    }
+    ESP_LOGI(TAG, "ROOM_NODE_2 fully operational. Streaming wireless telemetry to Master.");
 }
