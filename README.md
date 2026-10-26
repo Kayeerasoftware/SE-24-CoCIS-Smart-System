@@ -1,7 +1,7 @@
 # SE-24 CoCIS Smart Control and Monitoring System
 **Makerere University | College of Computing & Information Sciences**  
 **Course:** Embedded Systems Coursework (Academic Year 2026/2027)  
-**Group:** SE-24 | **Group Leader & Architect:** Kayeera Nathan (24/U/25913/EVE)  
+**Group:** SE-24   
 **Target Platform:** ESP32 (ESP-IDF) + PlatformIO in VS Code  
 **Communication:** Wireless ESP-NOW (2.4 GHz Peer-to-Peer Wi-Fi)
 
