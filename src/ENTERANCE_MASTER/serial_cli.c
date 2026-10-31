@@ -1,9 +1,9 @@
 /*
- * ====================================================================
- * CoCIS Smart System - Administrative Serial CLI Console
- * Component: serial_cli.c
- * Owner: Namuzibwa Laurinda C (24/U/1472) - Group SE-24
- * ====================================================================
+ ====================================================================
+ - CoCIS Smart System - Administrative Serial CLI Console (Enhanced)
+ - Component: serial_cli.c
+ - Owner: Namuzibwa Laurinda C (24/U/1472) - Group SE-24
+ ====================================================================
  */
 
 #include "serial_cli.h"
@@ -27,6 +27,15 @@ static const char *TAG = "SERIAL_CLI";
 
 #define CLI_UART_NUM        UART_NUM_0
 #define CLI_BUFFER_SIZE     256
+#define MAX_HISTORY_ITEMS   5
+
+// Command history buffer state
+static char s_history[MAX_HISTORY_ITEMS][CLI_BUFFER_SIZE];
+static int  s_history_count = 0;
+static int  s_history_idx = -1;
+
+// Session warning state tracking
+static bool s_warning_issued = false;
 
 static void print_banner(void) {
     printf("\n");
@@ -46,6 +55,22 @@ static void print_prompt(void) {
         printf("CoCIS-Master> ");
     }
     fflush(stdout);
+}
+
+static void add_to_history(const char *cmd) {
+    if (strlen(cmd) == 0) return;
+    if (s_history_count > 0 && strcmp(s_history[s_history_count - 1], cmd) == 0) {
+        return;
+    }
+    if (s_history_count < MAX_HISTORY_ITEMS) {
+        strcpy(s_history[s_history_count++], cmd);
+    } else {
+        for (int i = 0; i < MAX_HISTORY_ITEMS - 1; i++) {
+            strcpy(s_history[i], s_history[i + 1]);
+        }
+        strcpy(s_history[MAX_HISTORY_ITEMS - 1], cmd);
+    }
+    s_history_idx = s_history_count;
 }
 
 static void cmd_help(void) {
@@ -163,7 +188,6 @@ static void cmd_energy(void) {
     esp_now_gateway_get_room_telemetry(2, &r2);
 
     uint32_t total_sec = r1.energy_saved_sec + r2.energy_saved_sec;
-    // Assuming 500W lighting fixture per lecture room: 0.5 kW * (seconds / 3600)
     double kwh_saved = (double)total_sec * 0.5 / 3600.0;
 
     printf("\n=== CAMPUS ENERGY CONSERVATION ANALYTICS ===\n");
@@ -229,7 +253,7 @@ static void parse_command(char *line) {
             if (sscanf(arg2, "%d:%d", &sh, &sm) == 2 && sscanf(arg3, "%d:%d", &eh, &em) == 2) {
                 schedule_set_hours(sh, sm, eh, em);
                 sd_save_configuration(sh, sm, eh, em);
-                printf("Schedule updated to %02d:%02d - %02d:%02d and saved to /sdcard/config.txt.\n",
+                printf("Schedule updated to %02d:%02d to %02d:%02d and saved to /sdcard/config.txt.\n",
                        sh, sm, eh, em);
             } else {
                 printf("Usage: schedule set <HH:MM> <HH:MM> (e.g. schedule set 07:00 20:00)\n");
@@ -342,20 +366,80 @@ void serial_cli_init(void) {
 void serial_cli_task(void *pvParameters) {
     char rx_buffer[CLI_BUFFER_SIZE];
     int  buf_len = 0;
+    int  escape_state = 0;
 
     while (1) {
+        if (auth_is_authenticated()) {
+            uint32_t rem = auth_get_session_remaining_sec();
+            if (rem <= 30 && rem > 0 && !s_warning_issued) {
+                printf("\n[WARNING] Admin session expiring in %lu seconds due to inactivity.\n", (unsigned long)rem);
+                print_prompt();
+                s_warning_issued = true;
+            } else if (rem > 30) {
+                s_warning_issued = false;
+            }
+        } else {
+            s_warning_issued = false;
+        }
+
         uint8_t ch = 0;
-        int len = uart_read_bytes(CLI_UART_NUM, &ch, 1, pdMS_TO_TICKS(100));
+        int len = uart_read_bytes(CLI_UART_NUM, &ch, 1, pdMS_TO_TICKS(50));
         if (len > 0) {
+            if (escape_state == 0 && ch == 0x1B) {
+                escape_state = 1;
+                continue;
+            } else if (escape_state == 1) {
+                escape_state = (ch == '[') ? 2 : 0;
+                continue;
+            } else if (escape_state == 2) {
+                escape_state = 0;
+                if (ch == 'A') { // Up Arrow
+                    if (s_history_count > 0 && s_history_idx > 0) {
+                        s_history_idx--;
+                        while (buf_len > 0) {
+                            printf("\b \b");
+                            buf_len--;
+                        }
+                        strcpy(rx_buffer, s_history[s_history_idx]);
+                        buf_len = strlen(rx_buffer);
+                        printf("%s", rx_buffer);
+                        fflush(stdout);
+                    }
+                } else if (ch == 'B') { // Down Arrow
+                    if (s_history_count > 0 && s_history_idx < s_history_count - 1) {
+                        s_history_idx++;
+                        while (buf_len > 0) {
+                            printf("\b \b");
+                            buf_len--;
+                        }
+                        strcpy(rx_buffer, s_history[s_history_idx]);
+                        buf_len = strlen(rx_buffer);
+                        printf("%s", rx_buffer);
+                        fflush(stdout);
+                    } else if (s_history_idx >= s_history_count - 1) {
+                        s_history_idx = s_history_count;
+                        while (buf_len > 0) {
+                            printf("\b \b");
+                            buf_len--;
+                        }
+                        buf_len = 0;
+                        fflush(stdout);
+                    }
+                }
+                continue;
+            }
+
             if (ch == '\r' || ch == '\n') {
                 if (buf_len > 0) {
                     rx_buffer[buf_len] = '\0';
                     printf("\n");
+                    add_to_history(rx_buffer);
                     parse_command(rx_buffer);
                     buf_len = 0;
                 } else {
                     printf("\n");
                 }
+                s_history_idx = s_history_count;
                 print_prompt();
             } else if (ch == '\b' || ch == 127) { // Backspace
                 if (buf_len > 0) {
@@ -371,4 +455,3 @@ void serial_cli_task(void *pvParameters) {
         }
     }
 }
-

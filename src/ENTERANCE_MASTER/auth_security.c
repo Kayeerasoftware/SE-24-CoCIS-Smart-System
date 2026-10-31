@@ -86,14 +86,19 @@ const char *auth_get_logged_in_user(void) {
     if (auth_is_authenticated()) {
         return s_active_user;
     }
-    return "Guest";
+    return "GUEST";
 }
 
 uint32_t auth_get_session_remaining_sec(void) {
     if (!s_is_logged_in) return 0;
-    TickType_t elapsed = xTaskGetTickCount() - s_last_activity_tick;
-    uint32_t total_ticks = pdMS_TO_TICKS(SESSION_TIMEOUT_SEC * 1000);
-    if (elapsed >= total_ticks) return 0;
-    return (uint32_t)((total_ticks - elapsed) * portTICK_PERIOD_MS / 1000);
+
+    TickType_t now = xTaskGetTickCount();
+    TickType_t elapsed_ticks = now - s_last_activity_tick;
+    uint32_t elapsed_sec = (uint32_t)(elapsed_ticks / configTICK_RATE_HZ);
+
+    if (elapsed_sec >= SESSION_TIMEOUT_SEC) {
+        return 0;
+    }
+    return (uint32_t)(SESSION_TIMEOUT_SEC - elapsed_sec);
 }
 

@@ -15,7 +15,7 @@ void auth_refresh_activity(void);
 
 // User Info
 const char *auth_get_logged_in_user(void);
-uint32_t    auth_get_session_remaining_sec(void);
+uint32_t auth_get_session_remaining_sec(void);
 
 #endif // AUTH_SECURITY_H
 
