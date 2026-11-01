@@ -88,6 +88,8 @@ void trigger_emergency_evacuation(bool active, const char *source) {
 
 /* ====================================================================
  * Emergency Task (Monitors Pushbutton & Pulses Alarm Siren)
+ * Uses a non-blocking 20ms loop so button taps are never missed,
+ * even while emergency siren is actively pulsing.
  * ==================================================================== */
 void task_emergency_handler(void *pvParameters) {
     ESP_LOGI(TAG, "Emergency Handler Task running on Core %d.", xPortGetCoreID());
@@ -95,38 +97,39 @@ void task_emergency_handler(void *pvParameters) {
     /* Wait 500ms after boot for all voltages and pull-ups to settle */
     vTaskDelay(pdMS_TO_TICKS(500));
 
-    int prev_btn_state = gpio_get_level(PIN_BTN_EMERGENCY);
+    int prev_btn_state = 1;
+    uint32_t siren_tick = 0;
 
     while (1) {
         int current_btn = gpio_get_level(PIN_BTN_EMERGENCY);
 
-        /* Detect button click (falling edge: transition from 1 to 0) */
+        /* Detect button press (falling edge: transition from 1 to 0) */
         if (current_btn == 0 && prev_btn_state == 1) {
-            vTaskDelay(pdMS_TO_TICKS(50)); /* Debounce */
-            if (gpio_get_level(PIN_BTN_EMERGENCY) == 0) {
-                /* Toggle Emergency Mode on every button click */
-                bool new_state = !g_emergency_evacuation_active;
-                trigger_emergency_evacuation(new_state, "RED_EMERGENCY_BUTTON");
+            /* Toggle Emergency Mode on every button click */
+            bool new_state = !g_emergency_evacuation_active;
+            trigger_emergency_evacuation(new_state, "RED_EMERGENCY_BUTTON");
 
-                /* Wait for button release */
-                while (gpio_get_level(PIN_BTN_EMERGENCY) == 0) {
-                    vTaskDelay(pdMS_TO_TICKS(20));
-                }
+            /* Wait for button release with non-blocking delays */
+            while (gpio_get_level(PIN_BTN_EMERGENCY) == 0) {
+                vTaskDelay(pdMS_TO_TICKS(20));
             }
+            prev_btn_state = 1;
+            vTaskDelay(pdMS_TO_TICKS(100)); /* Debounce release to prevent double-toggle */
+            continue;
         }
         prev_btn_state = current_btn;
 
-        /* If emergency is currently active, pulse the dual sirens with real audio */
+        /* Non-blocking siren pulsing (200ms ON / 150ms OFF cycle = 350ms period) */
         if (g_emergency_evacuation_active) {
-            buzzer_sound_enable(PIN_BUZZER_ENTRY, true);
-            buzzer_sound_enable(PIN_BUZZER_EXIT, true);
-            vTaskDelay(pdMS_TO_TICKS(200));
-            buzzer_sound_enable(PIN_BUZZER_ENTRY, false);
-            buzzer_sound_enable(PIN_BUZZER_EXIT, false);
-            vTaskDelay(pdMS_TO_TICKS(150));
+            siren_tick = (siren_tick + 20) % 350;
+            bool sound_on = (siren_tick < 200);
+            buzzer_sound_enable(PIN_BUZZER_ENTRY, sound_on);
+            buzzer_sound_enable(PIN_BUZZER_EXIT, sound_on);
         } else {
-            vTaskDelay(pdMS_TO_TICKS(50));
+            siren_tick = 0;
         }
+
+        vTaskDelay(pdMS_TO_TICKS(20)); /* Fast, responsive 20ms polling interval */
     }
 }
 
