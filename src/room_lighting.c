@@ -74,7 +74,7 @@ esp_err_t room_lighting_init(void) {
 
     adc_oneshot_chan_cfg_t chan_cfg = {
         .bitwidth = ADC_BITWIDTH_12,
-        .atten = ADC_ATTEN_DB_11,
+        .atten = ADC_ATTEN_DB_12,
     };
     ESP_ERROR_CHECK(adc_oneshot_config_channel(s_adc1_handle, ADC_CHANNEL_6, &chan_cfg));
     ESP_ERROR_CHECK(adc_oneshot_config_channel(s_adc1_handle, ADC_CHANNEL_7, &chan_cfg));
