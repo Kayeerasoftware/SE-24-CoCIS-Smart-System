@@ -10,12 +10,19 @@
 #include "room_lighting.h"
 #include "emergency_mgr.h"
 #include "esp_system.h"
+#include <ctype.h>
 
 static const char *TAG = "CLI_CONSOLE";
 
 #define UART_PORT_NUM      UART_NUM_0
 #define UART_BAUD_RATE     115200
 #define BUF_SIZE           256
+#define MAX_HISTORY_ITEMS   5
+
+static char s_history[MAX_HISTORY_ITEMS][BUF_SIZE];
+static int  s_history_count = 0;
+static int  s_history_idx = -1;
+
 
 static bool s_is_admin_logged_in = false;
 static TickType_t s_admin_login_tick = 0;
@@ -219,32 +226,91 @@ static void execute_cli_command(char *cmd_line) {
     fflush(stdout);
 }
 
-void task_cli_console(void *pvParameters) {
-    ESP_LOGI(TAG, "CLI Console Task started on Core %d.", xPortGetCoreID());
+static void add_to_history(const char *cmd) {
+    if (strlen(cmd) == 0) return;
+    if (s_history_count > 0 && strcmp(s_history[s_history_count - 1], cmd) == 0) {
+        return;
+    }
+    if (s_history_count < MAX_HISTORY_ITEMS) {
+        strcpy(s_history[s_history_count++], cmd);
+    } else {
+        for (int i = 0; i < MAX_HISTORY_ITEMS - 1; i++) {
+            strcpy(s_history[i], s_history[i + 1]);
+        }
+        strcpy(s_history[MAX_HISTORY_ITEMS - 1], cmd);
+    }
+    s_history_idx = s_history_count;
+}
 
-    char line_buf[128];
+void task_cli_console(void *pvParameters) {
+   ESP_LOGI(TAG, "CLI Console Task started on Core %d.", xPortGetCoreID());
+
+    char line_buf[BUF_SIZE];
     int line_pos = 0;
+    int escape_state = 0;
 
     while (1) {
         uint8_t ch;
         int len = uart_read_bytes(UART_PORT_NUM, &ch, 1, pdMS_TO_TICKS(50));
         if (len > 0) {
-            // Echo character back to terminal
-            uart_write_bytes(UART_PORT_NUM, (const char *)&ch, 1);
+            // ANSI Escape Sequence Parser for Arrow Keys
+            if (escape_state == 0 && ch == 0x1B) {
+                escape_state = 1;
+                continue;
+            } else if (escape_state == 1) {
+                escape_state = (ch == '[') ? 2 : 0;
+                continue;
+            } else if (escape_state == 2) {
+                escape_state = 0;
+                if (ch == 'A') { // Up Arrow
+                    if (s_history_count > 0 && s_history_idx > 0) {
+                        s_history_idx--;
+                        while (line_pos > 0) {
+                            uart_write_bytes(UART_PORT_NUM, "\b \b", 3);
+                            line_pos--;
+                        }
+                        strcpy(line_buf, s_history[s_history_idx]);
+                        line_pos = strlen(line_buf);
+                        uart_write_bytes(UART_PORT_NUM, line_buf, line_pos);
+                    }
+                } else if (ch == 'B') { // Down Arrow
+                    if (s_history_count > 0 && s_history_idx < s_history_count - 1) {
+                        s_history_idx++;
+                        while (line_pos > 0) {
+                            uart_write_bytes(UART_PORT_NUM, "\b \b", 3);
+                            line_pos--;
+                        }
+                        strcpy(line_buf, s_history[s_history_idx]);
+                        line_pos = strlen(line_buf);
+                        uart_write_bytes(UART_PORT_NUM, line_buf, line_pos);
+                    } else if (s_history_idx >= s_history_count - 1) {
+                        s_history_idx = s_history_count;
+                        while (line_pos > 0) {
+                            uart_write_bytes(UART_PORT_NUM, "\b \b", 3);
+                            line_pos--;
+                        }
+                        line_pos = 0;
+                    }
+                }
+                continue;
+            }
 
             if (ch == '\r' || ch == '\n') {
                 uart_write_bytes(UART_PORT_NUM, "\r\n", 2);
                 line_buf[line_pos] = '\0';
+                add_to_history(line_buf); // Save command to history
                 execute_cli_command(line_buf);
                 line_pos = 0;
+                s_history_idx = s_history_count;
             } else if (ch == '\b' || ch == 127) {
                 if (line_pos > 0) {
                     line_pos--;
                     uart_write_bytes(UART_PORT_NUM, "\b \b", 3);
                 }
             } else {
-                if (line_pos < sizeof(line_buf) - 1) {
+                if (line_pos < sizeof(line_buf) - 1 && isprint(ch)) {
                     line_buf[line_pos++] = (char)ch;
+                    uart_write_bytes(UART_PORT_NUM, (const char *)&ch, 1);
                 }
             }
         }
