@@ -231,7 +231,7 @@ CoCIS> emergency off    <-- Restores normal automated control
 
 1. Tap an entry card (`tap in TAG_1001` and `tap in TAG_1002`). The building headcount is now `2`.
 2. Inspect the audit log on the SD card:
-   ```text
+   ```text 
    CoCIS> login admin se24
    CoCIS> logs
    ```
