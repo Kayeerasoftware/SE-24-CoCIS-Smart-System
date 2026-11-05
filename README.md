@@ -39,7 +39,7 @@ The **CoCIS Smart Control & Monitoring System** integrates automated access cont
 - **Strict Anti-Passback Algorithm:** Prevents card sharing and tailgating by maintaining bidirectional presence states (`STATE_OUTSIDE` $\leftrightarrow$ `STATE_INSIDE`). Duplicate entries or exits are rejected and flagged.
 - **3-Strike Intrusion Lockout:** 3 consecutive unknown/invalid card taps trigger a 60-second hardware lockout with acoustic alarms.
 - **After-Hours Curfew Schedule:** Configurable building operating window (default: 07:00 to 20:00). Prohibits unauthorized entry and traps after-hours occupants to stop unmonitored exit.
-- **Daylight-Harvesting Room Lighting:** Dual lecture rooms (Room 1 & Room 2) with independent PIR motion sensors and analog LDR sensors (ADC1). Classroom lighting relays (driving 8 LEDs) only activate if **Motion == TRUE AND Ambient Light < 250 Lux**.
+- **Daylight-Harvesting Room Lighting:** Dual lecture rooms (Room 1 & Room 2) with independent PIR motion sensors and analog LDR sensors (ADC1). Classroom lighting relays (driving 8 LEDs) only activate if **Motion == TRUE AND Ambient Light > 500 Lux**.
 - **30-Second Vacancy Auto-Shutoff:** Non-blocking countdown timer switches off lights after 30 seconds of no detected motion, accumulating real-time energy savings (kWh).
 - **One-Touch Emergency Evacuation Override:** Physical red pushbutton (`GPIO 32`) immediately opens the Exit gate to 90°, locks the Entry gate at 0°, forces all classroom lights ON, and pulses dual sirens.
 - **Persistent Storage & Power-Loss Crash Recovery:** MicroSD FATFS over shared VSPI bus logs forensic records to `/sdcard/access_log.csv` and atomically snapshots headcount to `/sdcard/occupancy.csv` to survive reboots.
@@ -183,17 +183,17 @@ CoCIS> tap in UNKNOWN_3
 
 ### 6.2 Smart Lighting & Daylight Harvesting
 
-#### Testing Daylight Harvesting Inhibit ($\ge 250$ Lux):
-1. Locate **`ldr1` (Room 1 LDR)** in Wokwi. Drag the slider to the right (bright sunlight, e.g. 500–800 lux).
+#### Testing Daylight Harvesting Inhibit (Lux<500):
+1. Locate **`ldr1` (Room 1 LDR)** in Wokwi. Drag the slider to the right (bright sunlight, i.e. 0-500 lux).
 2. Click **`pir1` (Room 1 PIR)** to simulate human motion.
 3. **Result:** The 4 purple LEDs **remain OFF**. The console confirms:
    ```text
    Room 1: Motion detected! Occupancy = YES
-   [Ambient Lux >= 250 -> Daylight Inhibit Active, Relay OFF, Power Conserved]
+   [Ambient Lux <= 500 -> Daylight Inhibit Active, Relay OFF, Power Conserved]
    ```
 
-#### Testing Low-Light Motion Activation ($< 250$ Lux):
-1. Drag the **`ldr1` slider** to the left (darkness, e.g. 50–150 lux).
+#### Testing Low-Light Motion Activation (Lux>500):
+1. Drag the **`ldr1` slider** to the left (darkness, i.e. 501–1000 lux).
 2. Click **`pir1`** to trigger motion.
 3. **Result:** Relay 1 (`GPIO 26`) energizes (drives LOW) and **all 4 purple LEDs turn ON**.
 4. The 30-second vacancy countdown begins. Each new motion click resets the timer to 30s.
@@ -203,7 +203,9 @@ CoCIS> tap in UNKNOWN_3
 2. The countdown reaches 0: Relay 1 de-energizes and lights turn OFF.
 3. Type `energy` in the CLI to view cumulative kWh energy conserved.
 
-*(Room 2 operates identically with `pir2`, `ldr2`, Relay 2 on `GPIO 25`, and 4 blue LEDs).*
+//Room 2 operates identically with `pir1`, `ldr1`, Relay 2 on `GPIO 26`, and 4 purple LEDs
+//while
+//Room 2 operates identically with `pir2`, `ldr2`, Relay 2 on `GPIO 25`, and 4 blue LEDs
 
 ---
 
@@ -316,7 +318,7 @@ c:\Users\ASUS\Desktop\SE-24-CoCIS-Smart-System\
 ├── src/
 │   ├── main.c                   # System startup & FreeRTOS dual-core task scheduler
 │   ├── access_entrance.c        # MFRC522 driver, anti-passback, lockout & servos
-│   ├── room_lighting.c          # PIR, LDR ADC1, 250 lux daylighting & PNP relays
+│   ├── room_lighting.c          # PIR, LDR ADC1, 500 max for lux daylighting & PNP relays
 │   ├── emergency_mgr.c          # Emergency button debounce, evacuation & heartbeat
 │   ├── storage_manager.c        # MicroSD SPI FATFS driver & crash recovery snapshot
 │   ├── cli_console.c            # UART0 115200 baud command parser & RBAC

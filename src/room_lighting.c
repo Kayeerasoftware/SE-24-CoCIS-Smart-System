@@ -83,8 +83,10 @@ static uint32_t read_lux_from_adc(adc_channel_t channel)
 }
 
 //Set relay state (accounting for PNP active-low logic)
-//lights_on=true  → IN=LOW  → relay energized → LED on
-//lights_on=false → IN=HIGH → relay off → LED off
+//lights_on=true
+//then GPIO_LEVEL=LOW  and relay energized turning LED on
+//lights_on=false
+//then GPIO_LEVEL=HIGH and relay off turning LED off
 static void set_room_light(gpio_num_t relay_pin, bool lights_on)
 {
     gpio_set_level(relay_pin, lights_on ? 0 : 1);

@@ -68,11 +68,11 @@ extern "C" {
  * ==================================================================== */
 #define SERVO_UNLOCK_DURATION_MS    5000    /* Gate stays open for 5 seconds */
 #define ACCESS_DENIED_DURATION_MS   3000    /* Red light & buzzer for 3 seconds */
-#define NO_MOTION_TIMEOUT_SEC       30      /* Room lights off after 30s no motion */
-#define DAYLIGHT_THRESHOLD_LUX      250     /* Inhibit lighting if lux >= 250 */
+#define NO_MOTION_TIMEOUT_SEC       30000      /* Room lights off after 30s no motion */
+#define DAYLIGHT_THRESHOLD_LUX      500     /* Inhibit lighting if lux >= 500 */
 #define INTRUSION_MAX_ATTEMPTS      3       /* Lockout trigger limit */
 #define INTRUSION_LOCKOUT_SEC       60      /* Buzzer lockout penalty duration */
-#define CLI_SESSION_TIMEOUT_SEC     300     /* Admin auto-logout after 5 mins */
+#define CLI_SESSION_TIMEOUT_SEC     300000     /* Admin auto-logout after 5 mins */
 
 /* ====================================================================
  * FREERTOS EVENT GROUP FLAG BITS
