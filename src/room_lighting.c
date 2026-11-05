@@ -2,6 +2,8 @@
 // 24/U/11978/EVE
 // 2400711978
 // SMART LIGHTING, PIR MOTION, LDR LUX INTERFACING
+//from lux formula used 0-500 is sufficient light
+//lux above 500, it goes dark
 
 #include "room_lighting.h"
 #include "esp_adc/adc_oneshot.h"
@@ -117,7 +119,7 @@ void task_room1_controller(void *pvParameters)
 
         //if motion detected
         //then room occupied
-        //reset 30s countdown */
+        //reset 30s countdown
         if (pir_motion == 1)
         {
             if (!s_room1_data.occupied)
@@ -208,7 +210,7 @@ void task_room2_controller(void *pvParameters)
         {
             if (!s_room2_data.occupied)
             {
-                ESP_LOGI(TAG, "Room 2: Motion detected! Occupancy = YES");
+                ESP_LOGI(TAG, "Room 2: Motion detected and Occupancy = YES");
             }
             s_room2_data.occupied = true;
             s_room2_data.countdown_sec = NO_MOTION_TIMEOUT_SEC;
@@ -218,12 +220,14 @@ void task_room2_controller(void *pvParameters)
         if (s_room2_data.countdown_sec > 0)
         {
             if (ambient_lux < DAYLIGHT_THRESHOLD_LUX)
-            {
+            {   
+                //light off
                 set_room_light(PIN_RELAY_ROOM2, true);
                 s_room2_data.lights_on = true;
             }
             else
             {
+                //light on
                 set_room_light(PIN_RELAY_ROOM2, false);
                 s_room2_data.lights_on = false;
                 seconds_light_off_saved++;
@@ -232,7 +236,8 @@ void task_room2_controller(void *pvParameters)
 
             if (s_room2_data.countdown_sec == 0)
             {
-                ESP_LOGI(TAG, "Room 2: 30s no-motion timeout. Occupancy = NO, lights OFF.");
+                //timeout message
+                ESP_LOGI(TAG, "Room 2: 30s of no motion timeout and Occupancy = NO, lights OFF.");
             }
         }
         else
@@ -245,7 +250,8 @@ void task_room2_controller(void *pvParameters)
 
         s_room2_data.ambient_lux = ambient_lux;
         s_room2_data.cumulative_kwh_saved = (0.100f * seconds_light_off_saved) / 3600.0f;
-
+        
+        //Telemetry frames are pushed in inervals of 2 seconds 
         if ((xTaskGetTickCount() - last_telemetry_tick) >= pdMS_TO_TICKS(2000))
         {
             xQueueSend(xQueueTelemetry, &s_room2_data, (TickType_t)0);
