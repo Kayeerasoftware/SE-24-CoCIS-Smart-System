@@ -325,9 +325,9 @@ Servos are driven via ESP32 **LEDC Timer 0** configured at 50Hz (20ms period) wi
 ### 4.2 Smart Lighting & Daylight Harvesting Subsystem
 
 #### Daylight-Harvesting Control Logic
-Classroom lighting is controlled by evaluating both human presence and natural solar illumination. The ambient illuminance threshold is defined at **250 Lux**:
+Classroom lighting is controlled by evaluating both human presence and natural solar illumination. The ambient illuminance threshold is defined at **500 Lux**:
 
-$$\text{Lighting Relay State} = \begin{cases} \text{ENERGIZED (ON)}, & \text{if } (\text{Room Occupancy} == \text{TRUE}) \land (\text{Ambient Lux} < 250) \\ \text{DE-ENERGIZED (OFF)}, & \text{if } (\text{Room Occupancy} == \text{FALSE}) \lor (\text{Ambient Lux} \ge 250) \end{cases}$$
+$$\text{Lighting Relay State} = \begin{cases} \text{ENERGIZED (ON)}, & \text{if } (\text{Room Occupancy} == \text{TRUE}) \land (\text{Ambient Lux} < 500) \\ \text{DE-ENERGIZED (OFF)}, & \text{if } (\text{Room Occupancy} == \text{FALSE}) \lor (\text{Ambient Lux} \ge 500) \end{cases}$$
 
 ```mermaid
 stateDiagram-v2
@@ -338,12 +338,15 @@ stateDiagram-v2
     state EVAL_SENSORS {
         [*] --> READ_ADC : Sample LDR Voltage Divider (ADC1)
         READ_ADC --> CHECK_LUX : Compute Lux = (ADC * 1000) / 4095
-        CHECK_LUX --> DAYLIGHT_SUFFICIENT : Lux >= 250 Lux
-        CHECK_LUX --> DAYLIGHT_DARK : Lux < 250 Lux
+        CHECK_LUX --> DAYLIGHT_SUFFICIENT : Lux >= 500 Lux
+        CHECK_LUX --> DAYLIGHT_DARK : Lux < 500 Lux
     }
 
-    DAYLIGHT_SUFFICIENT --> OCCUPIED_LIGHTS_INHIBITED : Daylight Inhibit Active
-    DAYLIGHT_DARK --> OCCUPIED_LIGHTS_ON : Energize PNP Relay (GPIO LOW)
+    DAYLIGHT_SUFFICIENT 
+        then OCCUPIED_LIGHTS_INHIBITED : Daylight Inhibit Active
+        GPIO HIGH
+    DAYLIGHT_DARK 
+        then OCCUPIED_LIGHTS_ON : Energize PNP Relay (GPIO LOW)
 
     state OCCUPIED_LIGHTS_ON {
         [*] --> TIMER_30S : Initialize countdown_sec = 30
