@@ -12,18 +12,21 @@
 static const char *TAG = "STORAGE_MGR";
 #define MOUNT_POINT "/sdcard"
 
+// Keep the mounted card state available to the logging and recovery routines.
 static sdmmc_card_t *s_card = NULL;
 static bool s_sd_mounted = false;
 
 esp_err_t storage_manager_init(void) {
     ESP_LOGI(TAG, "Initializing MicroSD Card on VSPI (CS: GPIO %d)...", PIN_SD_CS);
 
+    // Do not format a card automatically if mounting fails; preserve its contents.
     esp_vfs_fat_sdmmc_mount_config_t mount_config = {
         .format_if_mount_failed = false,
         .max_files = 5,
         .allocation_unit_size = 16 * 1024
     };
 
+    // Configure the SPI bus pins used to communicate with the SD card.
     spi_bus_config_t bus_cfg = {
         .mosi_io_num = PIN_SPI_MOSI,
         .miso_io_num = PIN_SPI_MISO,
@@ -33,10 +36,11 @@ esp_err_t storage_manager_init(void) {
         .max_transfer_sz = 4000,
     };
 
-    // Mutex take for SPI initialization
+    // Serialize bus setup with other SPI users to avoid conflicting access.
     if (xSemaphoreTake(xSemaphoreSpiMutex, pdMS_TO_TICKS(1000)) == pdTRUE) {
         esp_err_t ret = spi_bus_initialize(SPI2_HOST, &bus_cfg, SDSPI_DEFAULT_DMA);
         if (ret == ESP_OK) {
+            // Bind the SD card's chip-select pin to the shared SPI host.
             sdspi_device_config_t slot_config = SDSPI_DEVICE_CONFIG_DEFAULT();
             slot_config.gpio_cs = PIN_SD_CS;
             slot_config.host_id = SPI2_HOST;
@@ -57,7 +61,7 @@ esp_err_t storage_manager_init(void) {
         xSemaphoreGive(xSemaphoreSpiMutex);
     }
 
-    // Attempt crash recovery immediately on boot
+    // Restore the last saved occupancy count after the card mount attempt.
     perform_crash_recovery();
     return ESP_OK;
 }
@@ -71,12 +75,13 @@ esp_err_t perform_crash_recovery(void) {
         return ESP_OK;
     }
 
+    // Read the first data row after the CSV header and restore its count.
     if (xSemaphoreTake(xSemaphoreSpiMutex, pdMS_TO_TICKS(500)) == pdTRUE) {
         FILE *f = fopen(MOUNT_POINT "/occupancy.csv", "r");
         if (f != NULL) {
             char line[64];
             if (fgets(line, sizeof(line), f)) {
-                // Header
+                // Skip the CSV column names before reading the saved count.
             }
             if (fgets(line, sizeof(line), f)) {
                 uint32_t recovered_count = 0;
@@ -95,10 +100,12 @@ esp_err_t perform_crash_recovery(void) {
 esp_err_t log_access_to_sd(const char *formatted_entry) {
     ESP_LOGI(TAG, "[AUDIT LOG] %s", formatted_entry);
 
+    // Keep console logging available when an SD card is not mounted.
     if (!s_sd_mounted) {
         return ESP_OK; // Gracefully logged to console
     }
 
+    // Append each audit record so existing history is retained.
     if (xSemaphoreTake(xSemaphoreSpiMutex, pdMS_TO_TICKS(500)) == pdTRUE) {
         FILE *f = fopen(MOUNT_POINT "/access_log.csv", "a");
         if (f != NULL) {
@@ -111,8 +118,10 @@ esp_err_t log_access_to_sd(const char *formatted_entry) {
 }
 
 esp_err_t update_sd_occupancy_snapshot(uint32_t count) {
+    // Occupancy persistence is optional; the live count remains in memory.
     if (!s_sd_mounted) return ESP_OK;
 
+    // Replace the previous snapshot with the latest count and CSV header.
     if (xSemaphoreTake(xSemaphoreSpiMutex, pdMS_TO_TICKS(500)) == pdTRUE) {
         FILE *f = fopen(MOUNT_POINT "/occupancy.csv", "w");
         if (f != NULL) {
@@ -129,6 +138,7 @@ void task_storage_writer(void *pvParameters) {
     ESP_LOGI(TAG, "Storage Writer Task started on Core %d.", xPortGetCoreID());
     log_entry_t entry;
 
+    // Wait for queued audit entries, then persist both the log and current count.
     while (1) {
         if (xQueueReceive(xQueueLogStorage, &entry, portMAX_DELAY) == pdTRUE) {
             log_access_to_sd(entry.formatted_log);
