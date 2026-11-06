@@ -2,11 +2,18 @@
 // 24/U/11978/EVE
 // 2400711978
 // SMART LIGHTING, PIR MOTION, LDR LUX INTERFACING
-//from lux formula used 0-500 is sufficient light
-//lux above 500, it goes dark
+//from lux formula used 0-500 is dark
+//lux above 500, rooms have sufficient light
 
+#include <math.h>
 #include "room_lighting.h"
 #include "esp_adc/adc_oneshot.h"
+#define ADC_MAX_RAW      4095
+#define LUX_MAX          1000
+#define LDR_GAMMA        0.7f
+#define LDR_RL10_OHMS    50000.0f
+#define LDR_FIXED_OHMS   10000.0f
+#define LUX_MAX_CLAMP    100000
 
 static const char *TAG = "ROOM_LIGHTING";
 
@@ -80,8 +87,17 @@ static uint32_t read_lux_from_adc(adc_channel_t channel)
     esp_err_t ret = adc_oneshot_read(s_adc1_handle, channel, &raw);
     if (ret != ESP_OK || raw < 0)
         raw = 0;
-    uint32_t lux = (uint32_t)((raw * 1000) / 4095);
-    return lux;
+
+    /* avoid divide-by-zero at the ends of the ADC range */
+    if (raw < 1)    raw = 1;
+    if (raw > 4094) raw = 4094;
+
+    float r_ldr = LDR_FIXED_OHMS * (float)raw / (4095.0f - (float)raw);
+    float lux = powf(LDR_RL10_OHMS * powf(10.0f, LDR_GAMMA) / r_ldr,
+                     1.0f / LDR_GAMMA);
+
+    if (lux > LUX_MAX_CLAMP) lux = LUX_MAX_CLAMP;
+    return (uint32_t)lux;
 }
 
 //Set relay state (accounting for PNP active-low logic)
@@ -143,7 +159,8 @@ void task_room1_controller(void *pvParameters)
             }
             else
             {
-                //Sufficient daylight → keep lights OFF (energy saving!)
+                //Sufficient daylight
+                //keep lights OFF (energy saving!)
                 set_room_light(PIN_RELAY_ROOM1, false);
                 s_room1_data.lights_on = false;
                 seconds_light_off_saved++;
@@ -177,7 +194,8 @@ void task_room1_controller(void *pvParameters)
             last_telemetry_tick = xTaskGetTickCount();
         }
 
-        vTaskDelay(pdMS_TO_TICKS(1000)); /* 1-second control loop */
+        //1 second control loop
+        vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
 
@@ -221,13 +239,13 @@ void task_room2_controller(void *pvParameters)
         {
             if (ambient_lux < DAYLIGHT_THRESHOLD_LUX)
             {   
-                //light off
+                //light on
                 set_room_light(PIN_RELAY_ROOM2, true);
                 s_room2_data.lights_on = true;
             }
             else
             {
-                //light on
+                //light off
                 set_room_light(PIN_RELAY_ROOM2, false);
                 s_room2_data.lights_on = false;
                 seconds_light_off_saved++;

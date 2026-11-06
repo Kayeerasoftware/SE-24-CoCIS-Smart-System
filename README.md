@@ -6,49 +6,49 @@
 [![Academic Year](https://img.shields.io/badge/Academic%20Year-2026%2F2027-orange.svg)]()
 [![Group](https://img.shields.io/badge/Group-SE--24-purple.svg)]()
 
-> **Makerere University** — Department of Computer Science & Software Engineering  
-> **Programmes:** BSE III & CS II  
+> **Makerere University** — Department of Computer Science and Software Engineering  
+> **Programmes:** BSE III and CS II  
 > **Course Supervisor:** Dr. Mary Nsabagwa (`mnsabagwa@cit.ac.ug`)  
 > **Architecture:** Single-MCU FreeRTOS Dual-Core Edge Controller  
 
 ---
 
 ## Table of Contents
-1. [System Overview & Key Capabilities](#1-system-overview--key-capabilities)
-2. [Hardware Pinout & Wiring Reference](#2-hardware-pinout--wiring-reference)
-3. [Prerequisites & Environment Setup](#3-prerequisites--environment-setup)
-4. [How to Build & Run the Simulation](#4-how-to-build--run-the-simulation)
+1. [System Overview and Key Capabilities](#1-system-overview--key-capabilities)
+2. [Hardware Pinout and Wiring Reference](#2-hardware-pinout--wiring-reference)
+3. [Prerequisites and Environment Setup](#3-prerequisites--environment-setup)
+4. [How to Build and Run the Simulation](#4-how-to-build--run-the-simulation)
 5. [Real Studio Audio Companion (PC Speaker Voice)](#5-real-studio-audio-companion-pc-speaker-voice)
-6. [Interactive Usage & Testing Guide](#6-interactive-usage--testing-guide)
-   - [6.1 Access Control & Anti-Passback](#61-access-control--anti-passback)
-   - [6.2 Smart Lighting & Daylight Harvesting](#62-smart-lighting--daylight-harvesting)
+6. [Interactive Usage and Testing Guide](#6-interactive-usage--testing-guide)
+   - [6.1 Access Control and Anti-Passback](#61-access-control--anti-passback)
+   - [6.2 Smart Lighting and Daylight Harvesting](#62-smart-lighting--daylight-harvesting)
    - [6.3 Emergency Evacuation Override](#63-emergency-evacuation-override)
-   - [6.4 Persistent Storage & Crash Recovery](#64-persistent-storage--crash-recovery)
+   - [6.4 Persistent Storage and Crash Recovery](#64-persistent-storage--crash-recovery)
    - [6.5 Serial Management CLI (UART0)](#65-serial-management-cli-uart0)
-7. [Registered User Database & Credentials](#7-registered-user-database--credentials)
+7. [Registered User Database and Credentials](#7-registered-user-database--credentials)
 8. [Project File Structure](#8-project-file-structure)
 9. [Group SE-24 Member Allocations](#9-group-se-24-member-allocations)
 
 ---
 
-## 1. System Overview & Key Capabilities
+## 1. System Overview and Key Capabilities
 
-The **CoCIS Smart Control & Monitoring System** integrates automated access control, occupancy tracking, and intelligent daylight-harvesting classroom energy management on a single **ESP32 Dual-Core microcontroller**:
+The **CoCIS Smart Control and Monitoring System** integrates automated access control, occupancy tracking, and intelligent daylight-harvesting classroom energy management on a single **ESP32 Dual-Core microcontroller**:
 
 - **Dual-Gate RFID Access Control:** Dedicated Entry (`rfid1`) and Exit (`rfid2`) MFRC522 SPI readers with SG90 servo barrier gates (0° closed $\rightarrow$ 90° open for 5 seconds), visual LED feedback, and 1000Hz acoustic buzzers.
 - **Strict Anti-Passback Algorithm:** Prevents card sharing and tailgating by maintaining bidirectional presence states (`STATE_OUTSIDE` $\leftrightarrow$ `STATE_INSIDE`). Duplicate entries or exits are rejected and flagged.
 - **3-Strike Intrusion Lockout:** 3 consecutive unknown/invalid card taps trigger a 60-second hardware lockout with acoustic alarms.
 - **After-Hours Curfew Schedule:** Configurable building operating window (default: 07:00 to 20:00). Prohibits unauthorized entry and traps after-hours occupants to stop unmonitored exit.
-- **Daylight-Harvesting Room Lighting:** Dual lecture rooms (Room 1 & Room 2) with independent PIR motion sensors and analog LDR sensors (ADC1). Classroom lighting relays (driving 8 LEDs) only activate if **Motion == TRUE AND Ambient Light > 500 Lux**.
+- **Daylight-Harvesting Room Lighting:** Dual lecture rooms (Room 1 and Room 2) with independent PIR motion sensors and analog LDR sensors (ADC1). Classroom lighting relays (driving 8 LEDs) only activate if **Motion == TRUE AND Ambient Light < 500 Lux**.
 - **30-Second Vacancy Auto-Shutoff:** Non-blocking countdown timer switches off lights after 30 seconds of no detected motion, accumulating real-time energy savings (kWh).
 - **One-Touch Emergency Evacuation Override:** Physical red pushbutton (`GPIO 32`) immediately opens the Exit gate to 90°, locks the Entry gate at 0°, forces all classroom lights ON, and pulses dual sirens.
-- **Persistent Storage & Power-Loss Crash Recovery:** MicroSD FATFS over shared VSPI bus logs forensic records to `/sdcard/access_log.csv` and atomically snapshots headcount to `/sdcard/occupancy.csv` to survive reboots.
+- **Persistent Storage and Power-Loss Crash Recovery:** MicroSD FATFS over shared VSPI bus logs forensic records to `/sdcard/access_log.csv` and atomically snapshots headcount to `/sdcard/occupancy.csv` to survive reboots.
 - **Interactive Management CLI:** Role-Based Access Control (RBAC) over UART0 at 115,200 baud with admin authentication (`login admin se24`), simulated card taps (`tap in <tag>`), and live telemetry tables.
 - **Real Studio Audio Companion:** Python bridge (`audio_companion.py`) listening over RFC2217 port 4000 to speak uncompressed voice clips (*"Access granted"* / *"Access denied"*) through PC speakers.
 
 ---
 
-## 2. Hardware Pinout & Wiring Reference
+## 2. Hardware Pinout and Wiring Reference
 
 Synchronized between [`diagram.json`](file:///c:/Users/ASUS/Desktop/SE-24-CoCIS-Smart-System/diagram.json) and [`include/project_config.h`](file:///c:/Users/ASUS/Desktop/SE-24-CoCIS-Smart-System/include/project_config.h):
 
@@ -81,7 +81,7 @@ Synchronized between [`diagram.json`](file:///c:/Users/ASUS/Desktop/SE-24-CoCIS-
 
 ---
 
-## 3. Prerequisites & Environment Setup
+## 3. Prerequisites and Environment Setup
 
 Ensure the following tools are installed:
 
@@ -97,7 +97,7 @@ Ensure the following tools are installed:
 
 ---
 
-## 4. How to Build & Run the Simulation
+## 4. How to Build and Run the Simulation
 
 ### Step 1: Open the Project in VS Code
 Open the project root directory:
@@ -139,9 +139,9 @@ python audio_companion.py
 
 ---
 
-## 6. Interactive Usage & Testing Guide
+## 6. Interactive Usage and Testing Guide
 
-### 6.1 Access Control & Anti-Passback
+### 6.1 Access Control and Anti-Passback
 
 #### Method A: Physical Simulation via Wokwi Components
 1. Click the **Entry RFID reader (`rfid1`)**. Its default simulated UID is `01:02:03:04` (Kayeera Nathan, Admin).
@@ -181,10 +181,10 @@ CoCIS> tap in UNKNOWN_3
 
 ---
 
-### 6.2 Smart Lighting & Daylight Harvesting
+### 6.2 Smart Lighting and Daylight Harvesting
 
-#### Testing Daylight Harvesting Inhibit (Lux<500):
-1. Locate **`ldr1` (Room 1 LDR)** in Wokwi. Drag the slider to the right (bright sunlight, i.e. 0-500 lux).
+#### Testing Daylight Harvesting Inhibit (Lux>500):
+1. Locate **`ldr1` (Room 1 LDR)** in Wokwi. Drag the slider to the right (bright sunlight, i.e. 500-1000 lux).
 2. Click **`pir1` (Room 1 PIR)** to simulate human motion.
 3. **Result:** The 4 purple LEDs **remain OFF**. The console confirms:
    ```text
@@ -192,8 +192,8 @@ CoCIS> tap in UNKNOWN_3
    [Ambient Lux <= 500 -> Daylight Inhibit Active, Relay OFF, Power Conserved]
    ```
 
-#### Testing Low-Light Motion Activation (Lux>500):
-1. Drag the **`ldr1` slider** to the left (darkness, i.e. 501–1000 lux).
+#### Testing Low-Light Motion Activation (Lux<500):
+1. Drag the **`ldr1` slider** to the left (darkness, i.e. 0–500 lux).
 2. Click **`pir1`** to trigger motion.
 3. **Result:** Relay 1 (`GPIO 26`) energizes (drives LOW) and **all 4 purple LEDs turn ON**.
 4. The 30-second vacancy countdown begins. Each new motion click resets the timer to 30s.
@@ -229,7 +229,7 @@ CoCIS> emergency off    <-- Restores normal automated control
 
 ---
 
-### 6.4 Persistent Storage & Crash Recovery
+### 6.4 Persistent Storage and Crash Recovery
 
 1. Tap an entry card (`tap in TAG_1001` and `tap in TAG_1002`). The building headcount is now `2`.
 2. Inspect the audit log on the SD card:
@@ -254,7 +254,7 @@ The serial console runs at **115,200 baud** over USB-UART0. Type `help` to see a
 
 ```text
 ======================================================================
-       CoCIS SMART CONTROL & MONITORING SYSTEM - MAKERERE UNIVERSITY   
+       CoCIS SMART CONTROL and MONITORING SYSTEM - MAKERERE UNIVERSITY   
        Group SE-24 (Single-MCU FreeRTOS Edge Controller)              
 ======================================================================
 Type 'help' for available commands. Welcome, Dr. Mary Nsabagwa!
@@ -263,9 +263,9 @@ CoCIS> help
 
 --- CoCIS Management CLI Command Reference ---
   help                         - Displays this reference list
-  status                       - System health, uptime & RTOS memory
-  occupancy                    - Current building headcount & presence
-  rooms                        - Live telemetry for Lecture Rooms 1 & 2
+  status                       - System health, uptime and RTOS memory
+  occupancy                    - Current building headcount and presence
+  rooms                        - Live telemetry for Lecture Rooms 1 and 2
   energy                       - Cumulative kWh energy saved
   schedule show                - View configured building access hours
   login <user> <pass>          - Admin authentication (e.g. login admin se24)
@@ -275,18 +275,18 @@ CoCIS> help
 --- Admin Privileged Commands (Login Required) ---
   schedule set <SH:SM> <EH:EM> - Update access hours (e.g. schedule set 07:00 20:00)
   curfew <on|off>              - Enforce after-hours curfew lockdown
-  emergency <on|off>           - Force global evacuation gates & lights override
+  emergency <on|off>           - Force global evacuation gates and lights override
   logs                         - View recent security audit logs
 ```
 
-#### Admin Login & Timeout:
+#### Admin Login and Timeout:
 - Username: `admin` | Password: `se24`
 - Command: `login admin se24`
 - If no command is typed for **5 minutes (300 seconds)**, the admin session automatically expires.
 
 ---
 
-## 7. Registered User Database & Credentials
+## 7. Registered User Database and Credentials
 
 The system stores 6 pre-registered individuals with both 4-byte hex UIDs and mnemonic `TAG_xxx` codes:
 
@@ -308,34 +308,34 @@ c:\Users\ASUS\Desktop\SE-24-CoCIS-Smart-System\
 │
 ├── diagram.json                 # Complete Wokwi simulation schematic (26 parts)
 ├── wokwi.toml                   # Wokwi simulator config (RFC2217 port 4000)
-├── platformio.ini               # PlatformIO build settings & flags
+├── platformio.ini               # PlatformIO build settings and flags
 ├── CMakeLists.txt               # ESP-IDF top-level CMake project definition
 ├── audio_companion.py           # Real crystal-clear studio voice PC player
 ├── access_granted.wav           # Uncompressed studio voice: "Access granted"
 ├── access_denied.wav            # Uncompressed studio voice: "Access denied" + siren
-├── README.md                    # System usage guide & documentation (this file)
+├── README.md                    # System usage guide and documentation (this file)
 │
 ├── src/
-│   ├── main.c                   # System startup & FreeRTOS dual-core task scheduler
-│   ├── access_entrance.c        # MFRC522 driver, anti-passback, lockout & servos
-│   ├── room_lighting.c          # PIR, LDR ADC1, 500 max for lux daylighting & PNP relays
-│   ├── emergency_mgr.c          # Emergency button debounce, evacuation & heartbeat
-│   ├── storage_manager.c        # MicroSD SPI FATFS driver & crash recovery snapshot
-│   ├── cli_console.c            # UART0 115200 baud command parser & RBAC
+│   ├── main.c                   # System startup and FreeRTOS dual-core task scheduler
+│   ├── access_entrance.c        # MFRC522 driver, anti-passback, lockout and servos
+│   ├── room_lighting.c          # PIR, LDR ADC1, 500 max for lux daylighting and PNP relays
+│   ├── emergency_mgr.c          # Emergency button debounce, evacuation and heartbeat
+│   ├── storage_manager.c        # MicroSD SPI FATFS driver and crash recovery snapshot
+│   ├── cli_console.c            # UART0 115200 baud command parser and RBAC
 │   └── CMakeLists.txt           # ESP-IDF component registration
 │
 ├── include/
-│   ├── project_config.h         # Master pin assignments, timings & FreeRTOS handles
+│   ├── project_config.h         # Master pin assignments, timings and FreeRTOS handles
 │   ├── access_entrance.h        # Access control API declarations
 │   ├── room_lighting.h          # Room automation API declarations
 │   ├── emergency_mgr.h          # Emergency manager API declarations
-│   ├── storage_manager.h        # Storage & crash recovery API declarations
+│   ├── storage_manager.h        # Storage and crash recovery API declarations
 │   ├── cli_console.h            # CLI console API declarations
 │   └── voice_samples.h          # Embedded 8kHz 8-bit mono PCM voice tables
 │
 └── Docs/
     ├── Coursework FOR embedded systems.pdf          # Official coursework brief
-    ├── TEAM_EXECUTIVE_SUMMARY_AND_SPECIFICATION.md  # Master team brief & video checklists
+    ├── TEAM_EXECUTIVE_SUMMARY_AND_SPECIFICATION.md  # Master team brief and video checklists
     └── SYSTEM_ARCHITECTURE.md                      # Detailed technical architecture report
 ```
 
@@ -343,14 +343,14 @@ c:\Users\ASUS\Desktop\SE-24-CoCIS-Smart-System\
 
 ## 9. Group SE-24 Member Allocations
 
-| Group Member | Reg No / Student No | Role | Primary Modules & Deliverables |
+| Group Member | Reg No / Student No | Role | Primary Modules and Deliverables |
 | :--- | :---: | :--- | :--- |
-| **Kayeera Nathan** | `24/U/25913/EVE` | **Group Leader & System Architect** | `main.c`, `emergency_mgr.c`, Dual-Core Scheduling, Emergency Evacuation ISR, Master Integration. |
+| **Kayeera Nathan** | `24/U/25913/EVE` | **Group Leader and System Architect** | `main.c`, `emergency_mgr.c`, Dual-Core Scheduling, Emergency Evacuation ISR, Master Integration. |
 | **Kasozi David Paul** | `24/U/25905/EVE` | **Access Control Specialist** | `access_entrance.c`, MFRC522 SPI Driver, Dual Gate Servos, Anti-Passback Algorithm. |
 | **Zziwa Mark Alex** | `24/U/11978/EVE` | **Smart Energy Management Lead** | `room_lighting.c`, PIR/LDR Interfacing, Daylight Harvesting, 30s Countdown, Energy Savings Meter. |
 | **Sseku Jovan** | `24/U/11172/EVE` | **Persistent Storage Lead** | `storage_manager.c`, MicroSD FATFS Driver, Audit CSV Logging, Dynamic Crash Recovery Engine. |
-| **Namuzibwa Laurinda** | `24/U/1472` | **Interface, Security & QA Lead** | `cli_console.c`, UART0 CLI Engine, Admin Authentication, Curfew Schedule, Intrusion Lockout. |
+| **Namuzibwa Laurinda** | `24/U/1472` | **Interface, Security and QA Lead** | `cli_console.c`, UART0 CLI Engine, Admin Authentication, Curfew Schedule, Intrusion Lockout. |
 
 ---
 
-*Makerere University — College of Computing & Information Sciences (CoCIS) — Group SE-24 — 2026/2027*
+*Makerere University — College of Computing and Information Sciences (CoCIS) — Group SE-24 — 2026/2027*

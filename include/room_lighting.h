@@ -7,15 +7,18 @@
 extern "C" {
 #endif
 
-/**
- * @brief Initialize PIR, LDR (ADC1), and Lighting Relays for Rooms 1 & 2.
- * Handled by Zziwa Mark Alex (Smart Energy Management Lead).
- */
+//include for Smart Energy Management Lead
+//Initialize PIR
+//LDR (ADC1)
+//Lighting Relays for Rooms 1 and 2
+//Smart Energy Management Lead).
+
 esp_err_t room_lighting_init(void);
 
-/**
- * @brief FreeRTOS Task to monitor sensors, manage 30s timers, and control relays.
- */
+//FreeRTOS Task to monitor sensors
+//manage 30s timers
+//control relays
+
 void task_room1_controller(void *pvParameters);
 void task_room2_controller(void *pvParameters);
 
