@@ -9,11 +9,11 @@
 #include "room_lighting.h"
 #include "esp_adc/adc_oneshot.h"
 #define ADC_MAX_RAW      4095
+
 #define LUX_MAX          1000
 #define LDR_GAMMA        0.7f
 #define LDR_RL10_OHMS    50000.0f
 #define LDR_FIXED_OHMS   10000.0f
-#define LUX_MAX_CLAMP    100000
 
 static const char *TAG = "ROOM_LIGHTING";
 
@@ -92,11 +92,10 @@ static uint32_t read_lux_from_adc(adc_channel_t channel)
     if (raw < 1)    raw = 1;
     if (raw > 4094) raw = 4094;
 
-    float r_ldr = LDR_FIXED_OHMS * (float)raw / (4095.0f - (float)raw);
-    float lux = powf(LDR_RL10_OHMS * powf(10.0f, LDR_GAMMA) / r_ldr,
-                     1.0f / LDR_GAMMA);
+    float r_ldr = LDR_FIXED_OHMS * (float)raw / (ADC_MAX_RAW - (float)raw);
+    float lux = powf(LDR_RL10_OHMS * powf(10.0f, LDR_GAMMA) / r_ldr,1.0f / LDR_GAMMA);
 
-    if (lux > LUX_MAX_CLAMP) lux = LUX_MAX_CLAMP;
+    if (lux > LUX_MAX) lux = LUX_MAX;
     return (uint32_t)lux;
 }
 
@@ -146,7 +145,7 @@ void task_room1_controller(void *pvParameters)
             s_room1_data.countdown_sec = NO_MOTION_TIMEOUT_SEC;
         }
 
-        //Lighting control logic
+        //Lighting control logic in room 1
         if (s_room1_data.countdown_sec > 0)
         {
             //Room is occupied
@@ -181,10 +180,9 @@ void task_room1_controller(void *pvParameters)
             s_room1_data.lights_on = false;
             seconds_light_off_saved++;
         }
-
-        //Update telemetry
         s_room1_data.ambient_lux = ambient_lux;
         // formula for Energy saved in kWh: (100W fixture × time_off_seconds)/ 3600
+
         s_room1_data.cumulative_kwh_saved = (0.100f * seconds_light_off_saved) / 3600.0f;
 
         //Send telemetry to queue every 2 seconds
@@ -234,7 +232,7 @@ void task_room2_controller(void *pvParameters)
             s_room2_data.countdown_sec = NO_MOTION_TIMEOUT_SEC;
         }
 
-        //Lighting control
+        //Lighting control in room 2
         if (s_room2_data.countdown_sec > 0)
         {
             if (ambient_lux < DAYLIGHT_THRESHOLD_LUX)
@@ -266,7 +264,10 @@ void task_room2_controller(void *pvParameters)
             seconds_light_off_saved++;
         }
 
+
         s_room2_data.ambient_lux = ambient_lux;
+        //energy saved in KW, 100W load 50W each
+
         s_room2_data.cumulative_kwh_saved = (0.100f * seconds_light_off_saved) / 3600.0f;
         
         //Telemetry frames are pushed in inervals of 2 seconds 

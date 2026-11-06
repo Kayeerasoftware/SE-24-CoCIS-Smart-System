@@ -1,7 +1,7 @@
 /**
  * @file cli_console.c
- * @brief Management CLI, Role-Based Access, Schedule Configuration & Security
- * @author Namuzibwa Laurinda (Reg No: 24/U/1472) - Interface, Security & QA Lead
+ * @brief Management CLI, Role-Based Access, Schedule Configuration and Security
+ * @author Namuzibwa Laurinda (Reg No: 24/U/1472) - Interface, Security and QA Lead
  */
 
 #include "cli_console.h"
@@ -29,7 +29,7 @@ static TickType_t s_admin_login_tick = 0;
 
 static void print_banner(void) {
     printf("\r\n\033[1;36m======================================================================\033[0m\r\n");
-    printf("\033[1;33m       CoCIS SMART CONTROL & MONITORING SYSTEM - MAKERERE UNIVERSITY   \033[0m\r\n");
+    printf("\033[1;33m       CoCIS SMART CONTROL and MONITORING SYSTEM - MAKERERE UNIVERSITY   \033[0m\r\n");
     printf("\033[1;32m       Group SE-24 (Single-MCU FreeRTOS Edge Controller)              \033[0m\r\n");
     printf("\033[1;36m======================================================================\033[0m\r\n");
     printf("Type \033[1;32m'help'\033[0m for available commands. Welcome, Dr. Mary Nsabagwa!\r\n\nCoCIS> ");
@@ -79,10 +79,10 @@ static void execute_cli_command(char *cmd_line) {
     if (strcmp(cmd, "help") == 0) {
         printf("\r\n\033[1;34m--- CoCIS Management CLI Command Reference ---\033[0m\r\n");
         printf("  help                         - Displays this reference list\r\n");
-        printf("  status                       - System health, uptime & RTOS memory\r\n");
-        printf("  occupancy                    - Current building headcount & presence\r\n");
-        printf("  rooms                        - Live telemetry for Lecture Rooms 1 & 2\r\n");
-        printf("  energy                       - Cumulative kWh energy saved\r\n");
+        printf("  status                       - System health, uptime and RTOS memory\r\n");
+        printf("  occupancy                    - Current building headcount and presence\r\n");
+        printf("  rooms                        - Live telemetry for Lecture Rooms 1 and 2\r\n");
+        printf("  energy                       - Cumulative kWh energy saved from daylight harvest and 30s shutoff\r\n");
         printf("  schedule show                - View configured building access hours\r\n");
         printf("  login <user> <pass>          - Admin authentication (e.g. login admin se24)\r\n");
         printf("  logout                       - Relinquish admin session\r\n");
@@ -90,7 +90,7 @@ static void execute_cli_command(char *cmd_line) {
         printf("\r\n\033[1;35m--- Admin Privileged Commands (Login Required) ---\033[0m\r\n");
         printf("  schedule set <SH:SM> <EH:EM> - Update access hours (e.g. schedule set 07:00 20:00)\r\n");
         printf("  curfew <on|off>              - Enforce after-hours curfew lockdown\r\n");
-        printf("  emergency <on|off>           - Force global evacuation gates & lights override\r\n");
+        printf("  emergency <on|off>           - Force global evacuation gates and lights override\r\n");
         printf("  logs                         - View recent security audit logs\r\n");
     }
     else if (strcmp(cmd, "status") == 0) {
@@ -123,7 +123,7 @@ static void execute_cli_command(char *cmd_line) {
         printf("\r\n\033[1;32m[SMART ENERGY SAVINGS REPORT]\033[0m\r\n");
         printf("  Room 1 Conserved : %.4f kWh\r\n", r1.cumulative_kwh_saved);
         printf("  Room 2 Conserved : %.4f kWh\r\n", r2.cumulative_kwh_saved);
-        printf("  TOTAL CONSERVED  : \033[1;32m%.4f kWh\033[0m (via Daylight-Harvest & 30s Shutoff)\r\n", total_kwh);
+        printf("  TOTAL CONSERVED  : \033[1;32m%.4f kWh\033[0m (via Daylight-Harvest and 30s Shutoff)\r\n", total_kwh);
     }
     else if (strcmp(cmd, "schedule") == 0) {
         char *sub = strtok(NULL, " \r\n");

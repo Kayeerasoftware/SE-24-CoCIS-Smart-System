@@ -189,7 +189,7 @@ CoCIS> tap in UNKNOWN_3
 3. **Result:** The 4 purple LEDs **remain OFF**. The console confirms:
    ```text
    Room 1: Motion detected! Occupancy = YES
-   [Ambient Lux <= 500 -> Daylight Inhibit Active, Relay OFF, Power Conserved]
+   [Ambient Lux >= 500 -> Daylight Inhibit Active, Relay OFF, Power Conserved]
    ```
 
 #### Testing Low-Light Motion Activation (Lux<500):
