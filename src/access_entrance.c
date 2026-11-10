@@ -268,15 +268,26 @@ static void uid_to_hex_string(const uint8_t *uid, char *out, size_t out_size) {
     snprintf(out, out_size, "%02X%02X%02X%02X", uid[0], uid[1], uid[2], uid[3]);
 }
 
-/* Case-insensitive string comparison for hex UID matching */
-static int strcasecmp_local(const char *a, const char *b) {
-    while (*a && *b) {
-        char ca = (*a >= 'a' && *a <= 'z') ? (*a - 32) : *a;
-        char cb = (*b >= 'a' && *b <= 'z') ? (*b - 32) : *b;
-        if (ca != cb) return ca - cb;
-        a++; b++;
+/* Normalized, delimiter-agnostic (ignores ':', '-', ' ') case-insensitive tag comparison */
+static bool tag_id_matches(const char *stored_tag, const char *input_tag) {
+    if (!stored_tag || !input_tag) return false;
+
+    char s1[32] = {0}, s2[32] = {0};
+    int j = 0;
+    for (int i = 0; stored_tag[i] && j < (int)sizeof(s1) - 1; i++) {
+        if (stored_tag[i] != ':' && stored_tag[i] != '-' && stored_tag[i] != ' ') {
+            char c = stored_tag[i];
+            s1[j++] = (c >= 'a' && c <= 'z') ? (c - 32) : c;
+        }
     }
-    return (unsigned char)*a - (unsigned char)*b;
+    j = 0;
+    for (int i = 0; input_tag[i] && j < (int)sizeof(s2) - 1; i++) {
+        if (input_tag[i] != ':' && input_tag[i] != '-' && input_tag[i] != ' ') {
+            char c = input_tag[i];
+            s2[j++] = (c >= 'a' && c <= 'z') ? (c - 32) : c;
+        }
+    }
+    return (strcmp(s1, s2) == 0);
 }
 
 /* ====================================================================
@@ -299,8 +310,9 @@ static user_record_t s_local_users[] = {
     {"C0FFEE99", "Sseku Jovan",          USER_ROLE_STUDENT, STATE_OUTSIDE, true},
     {"TAG_1004", "Sseku Jovan",          USER_ROLE_STUDENT, STATE_OUTSIDE, true},
 
-    /* ---- NFC Tag: UID 04:11:22:33:44:55:66 (first 4 bytes read) ---- */
+    /* ---- NFC Tag: UID 04:11:22:33:44:55:66 (reads 04112233 or 88041122 in 4-byte cascade) ---- */
     {"04112233", "Namuzibwa Laurinda",   USER_ROLE_STAFF,   STATE_OUTSIDE, true},
+    {"88041122", "Namuzibwa Laurinda",   USER_ROLE_STAFF,   STATE_OUTSIDE, true},
     {"TAG_1005", "Namuzibwa Laurinda",   USER_ROLE_STAFF,   STATE_OUTSIDE, true},
 
     /* ---- Red Card: UID AA:BB:CC:DD ---- */
@@ -597,11 +609,11 @@ void process_card_tap(const char *tag_id, access_direction_t direction) {
         }
     }
 
-    /* 3. Database lookup (case-insensitive for hex UIDs) */
+    /* 3. Database lookup (delimiter & case agnostic) */
     user_record_t *matched_user = NULL;
     if (xSemaphoreTake(xSemaphoreDbMutex, pdMS_TO_TICKS(200)) == pdTRUE) {
         for (size_t i = 0; i < s_num_users; i++) {
-            if ((strcasecmp_local(s_local_users[i].tag_id, tag_id) == 0) && s_local_users[i].is_active) {
+            if (tag_id_matches(s_local_users[i].tag_id, tag_id) && s_local_users[i].is_active) {
                 matched_user = &s_local_users[i];
                 break;
             }
@@ -677,11 +689,15 @@ void process_card_tap(const char *tag_id, access_direction_t direction) {
 
     /* 7. ACCESS GRANTED -> Update State */
     if (xSemaphoreTake(xSemaphoreDbMutex, pdMS_TO_TICKS(200)) == pdTRUE) {
+        occupancy_state_t new_state = (direction == DIR_ENTRY) ? STATE_INSIDE : STATE_OUTSIDE;
+        for (size_t u = 0; u < s_num_users; u++) {
+            if (strcmp(s_local_users[u].name, matched_user->name) == 0) {
+                s_local_users[u].current_state = new_state;
+            }
+        }
         if (direction == DIR_ENTRY) {
-            matched_user->current_state = STATE_INSIDE;
             g_building_occupancy_count++;
         } else {
-            matched_user->current_state = STATE_OUTSIDE;
             if (g_building_occupancy_count > 0) g_building_occupancy_count--;
         }
         xSemaphoreGive(xSemaphoreDbMutex);
@@ -725,10 +741,10 @@ void task_entrance_controller(void *pvParameters) {
             ESP_LOGI(TAG, ">>> [ENTRY RFID] Card Detected! UID = %s (0x%02X 0x%02X 0x%02X 0x%02X)",
                      uid_str, entry_uid[0], entry_uid[1], entry_uid[2], entry_uid[3]);
 
-            /* Search database by raw hex UID (case-insensitive) */
+            /* Search database by raw hex UID (delimiter & case agnostic) */
             bool found = false;
             for (size_t i = 0; i < s_num_users; i++) {
-                if (strcasecmp_local(s_local_users[i].tag_id, uid_str) == 0) {
+                if (tag_id_matches(s_local_users[i].tag_id, uid_str)) {
                     found = true;
                     ESP_LOGI(TAG, "    Matched user: %s (tag_id=%s)", s_local_users[i].name, s_local_users[i].tag_id);
                     process_card_tap(s_local_users[i].tag_id, DIR_ENTRY);
@@ -752,10 +768,10 @@ void task_entrance_controller(void *pvParameters) {
             ESP_LOGI(TAG, ">>> [EXIT RFID] Card Detected! UID = %s (0x%02X 0x%02X 0x%02X 0x%02X)",
                      uid_str, exit_uid[0], exit_uid[1], exit_uid[2], exit_uid[3]);
 
-            /* Search database by raw hex UID (case-insensitive) */
+            /* Search database by raw hex UID (delimiter & case agnostic) */
             bool found = false;
             for (size_t i = 0; i < s_num_users; i++) {
-                if (strcasecmp_local(s_local_users[i].tag_id, uid_str) == 0) {
+                if (tag_id_matches(s_local_users[i].tag_id, uid_str)) {
                     found = true;
                     ESP_LOGI(TAG, "    Matched user: %s (tag_id=%s)", s_local_users[i].name, s_local_users[i].tag_id);
                     process_card_tap(s_local_users[i].tag_id, DIR_EXIT);
