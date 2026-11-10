@@ -6,6 +6,7 @@
 
 #include "emergency_mgr.h"
 #include "access_entrance.h"
+#include "esp_system.h"
 
 static const char *TAG = "EMERGENCY_MGR";
 
@@ -140,7 +141,16 @@ void task_system_heartbeat(void *pvParameters) {
     ESP_LOGI(TAG, "Heartbeat Watchdog Task active on Core %d.", xPortGetCoreID());
 
     while (1) {
-        ESP_LOGD(TAG, "Heartbeat tick. Free Heap: %lu bytes", (unsigned long)esp_get_free_heap_size());
+        uint32_t free_heap = (uint32_t)esp_get_free_heap_size();
+        ESP_LOGD(TAG, "Heartbeat tick. Free Heap: %lu bytes", (unsigned long)free_heap);
+
+        /* Automated Watchdog: Reboot if critical heap exhaustion occurs (< 10 KB) */
+        if (free_heap < 10240) {
+            ESP_LOGE(TAG, "CRITICAL: Severe heap exhaustion (%lu bytes remaining)! Triggering recovery reboot...", (unsigned long)free_heap);
+            vTaskDelay(pdMS_TO_TICKS(500));
+            esp_restart();
+        }
+
         vTaskDelay(pdMS_TO_TICKS(5000));
     }
 }

@@ -1,0 +1,274 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2333.0689166666666 1173.3" width="2333.0689166666666" height="1173.3" style="--bg:#18181B;--fg:#F4F4F5;--line:#71717A;--muted:#A1A1AA;--surface:#27272A;--border:#3F3F46;background:var(--bg)">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap');
+  text { font-family: 'Inter', system-ui, sans-serif; }
+  svg {
+    /* Derived from --bg and --fg (overridable via --line, --accent, etc.) */
+    --_text:          var(--fg);
+    --_text-sec:      var(--muted, color-mix(in srgb, var(--fg) 60%, var(--bg)));
+    --_text-muted:    var(--muted, color-mix(in srgb, var(--fg) 40%, var(--bg)));
+    --_text-faint:    color-mix(in srgb, var(--fg) 25%, var(--bg));
+    --_line:          var(--line, color-mix(in srgb, var(--fg) 50%, var(--bg)));
+    --_arrow:         var(--accent, color-mix(in srgb, var(--fg) 85%, var(--bg)));
+    --_node-fill:     var(--surface, color-mix(in srgb, var(--fg) 3%, var(--bg)));
+    --_node-stroke:   var(--border, color-mix(in srgb, var(--fg) 20%, var(--bg)));
+    --_group-fill:    var(--bg);
+    --_group-hdr:     color-mix(in srgb, var(--fg) 5%, var(--bg));
+    --_inner-stroke:  color-mix(in srgb, var(--fg) 12%, var(--bg));
+    --_key-badge:     color-mix(in srgb, var(--fg) 10%, var(--bg));
+  }
+</style>
+<defs>
+  <marker id="arrowhead" markerWidth="8" markerHeight="5" refX="7" refY="2.5" orient="auto">
+    <polygon points="0 0, 8 2.5, 0 5" fill="var(--_arrow)" stroke="var(--_arrow)" stroke-width="0.75" stroke-linejoin="round" />
+  </marker>
+  <marker id="arrowhead-start" markerWidth="8" markerHeight="5" refX="1" refY="2.5" orient="auto-start-reverse">
+    <polygon points="8 0, 0 2.5, 8 5" fill="var(--_arrow)" stroke="var(--_arrow)" stroke-width="0.75" stroke-linejoin="round" />
+  </marker>
+</defs>
+<g class="subgraph" data-id="Inputs" data-label="Sensors &amp; Hardware Triggers">
+  <rect x="785.6727777777779" y="40" width="1214.1979999999999" height="113.80000000000001" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="785.6727777777779" y="40" width="1214.1979999999999" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="797.6727777777779" y="54" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">Sensors &amp; Hardware Triggers</text>
+</g>
+<g class="subgraph" data-id="Core0" data-label="Core 0: Real-Time Safety &amp; Sensor Processing">
+  <rect x="1064.088888888889" y="261.8" width="764.709" height="149.8" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="1064.088888888889" y="261.8" width="764.709" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="1076.088888888889" y="275.8" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">Core 0: Real-Time Safety &amp; Sensor Processing</text>
+</g>
+<g class="subgraph" data-id="IPC" data-label="FreeRTOS Synchronization &amp; IPC Layer">
+  <rect x="327.54400000000004" y="611.9000000000001" width="1261.03" height="149.8" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="327.54400000000004" y="611.9000000000001" width="1261.03" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="339.54400000000004" y="625.9000000000001" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">FreeRTOS Synchronization &amp; IPC Layer</text>
+</g>
+<g class="subgraph" data-id="Core1" data-label="Core 1: Storage, Security &amp; Administrative Engine">
+  <rect x="463.1294166666663" y="821.7" width="584.35" height="113.80000000000001" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="463.1294166666663" y="821.7" width="584.35" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="475.1294166666663" y="835.7" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">Core 1: Storage, Security &amp; Administrative Engine</text>
+</g>
+<g class="subgraph" data-id="Outputs" data-label="Actuators &amp; Peripherals">
+  <rect x="527.4370000000001" y="1019.5" width="1765.353" height="113.80000000000001" rx="0" ry="0" fill="var(--_group-fill)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <rect x="527.4370000000001" y="1019.5" width="1765.353" height="28" rx="0" ry="0" fill="var(--_group-hdr)" stroke="var(--_node-stroke)" stroke-width="1" />
+  <text x="539.4370000000001" y="1033.5" font-size="12" font-weight="600" fill="var(--_text-sec)" dy="4.199999999999999">Actuators &amp; Peripherals</text>
+</g>
+<polyline class="edge" data-from="EMERG_BTN" data-to="EMERG_ISR" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="1032.276277777778,137.8 1032.276277777778,207.8 1347.3718888888889,207.8 1347.3718888888889,341.8" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="EMERG_ISR" data-to="EVT_GRP" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Assert FLAG_EMERGENCY" points="1347.3718888888889,395.6 1347.3718888888889,513.6 542.5918333333332,513.6 542.5918333333332,593.9000000000001 475.66899999999987,593.9000000000001 475.66899999999964,696.1250000000001" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="TAP_IN" data-to="TASK_ENTRANCE" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="1472.2067777777781,137.8 1472.2067777777781,239.8 1727.7263888888888,239.8 1727.7263888888888,341.8" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="TAP_OUT" data-to="TASK_ENTRANCE" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="1764.0117777777778,137.8 1764.0117777777778,239.8 1727.7263888888888,239.8 1727.7263888888888,341.8" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="PIR1_HW" data-to="TASK_R1" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="1620.702777777778,137.8 1620.702777777778,171.8 1709.369222222222,171.8 1709.369222222222,317.8 1187.133388888889,317.8 1187.133388888889,341.8" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="LDR1_HW" data-to="TASK_R1" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="865.6257777777779,137.8 865.6257777777779,219.8 1151.451888888889,219.8 1151.4518888888888,341.8" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="PIR2_HW" data-to="TASK_R2" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="1188.552777777778,137.8 1188.552777777778,195.8 1543.291888888889,195.8 1543.291888888889,341.8" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="LDR2_HW" data-to="TASK_R2" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="1919.9177777777777,137.8 1919.9177777777777,243.8 1766.0835555555554,243.8 1766.0835555555554,329.8 1578.9733888888886,329.8 1578.9733888888886,341.8" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="UART_RXD" data-to="TASK_CLI" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="1322.5992777777778,137.8 1322.5992777777778,183.8 40.039999999999964,183.8 40.039999999999964,803.7 742.7074166666663,803.7 742.7074166666664,865.7" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="TASK_ENTRANCE" data-to="MUTEX_DB" data-style="solid" data-arrow-start="true" data-arrow-end="true" data-label="Atomic Mutex" points="1718.274,395.6 1718.274,477.6 1953.4386666666667,477.6 1953.4386666666667,557.9000000000001 1170.9241666666665,557.9000000000001 1170.9241666666662,679.9000000000001 1258.038333333333,679.9000000000001 1258.038333333333,696.1250000000001" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" marker-start="url(#arrowhead-start)" />
+<polyline class="edge" data-from="TASK_ENTRANCE" data-to="Q_ACCESS" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Post Event" points="1699.369222222222,395.6 1699.369222222222,489.6 1875.7986666666666,489.6 1875.7986666666666,545.9000000000001 898.6309999999996,545.9000000000001 898.6309999999994,696.1250000000001" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="TASK_ENTRANCE" data-to="Q_LOGS" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Post Audit Record" points="1737.1787777777777,395.6 1737.1787777777777,465.6 2047.8646666666666,465.6 2047.8646666666666,569.9000000000001 1180.9241666666665,569.9000000000001 1180.9241666666662,667.9000000000001 1093.8099999999995,667.9000000000001 1093.8099999999995,696.1250000000001" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="TASK_R1" data-to="Q_TELEM" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Post Telemetry" points="1127.6642222222222,395.6 1127.6642222222222,489.6 266.70799999999986,489.6 266.70799999999986,593.9000000000001 465.66899999999987,593.9000000000001 465.66899999999964,667.9000000000001 684.8513333333326,667.9000000000001 684.8513333333326,696.1250000000001" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="TASK_R2" data-to="Q_TELEM" data-style="solid" data-arrow-start="false" data-arrow-end="true" data-label="Post Telemetry" points="1519.504222222222,395.6 1519.5042222222223,525.6 733.9086666666665,525.6 733.9086666666662,696.1250000000001" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="EVT_GRP" data-to="TASK_R1" data-style="dotted" data-arrow-start="false" data-arrow-end="true" data-label="Event Trigger" points="431.62733333333335,749.9250000000001 431.62733333333335,779.7 176.62400000000002,779.7 176.62400000000002,243.80000000000007 1115.770388888889,243.80000000000007 1115.770388888889,341.80000000000007" fill="none" stroke="var(--_line)" stroke-width="1" stroke-dasharray="4 4" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="EVT_GRP" data-to="TASK_R2" data-style="dotted" data-arrow-start="false" data-arrow-end="true" data-label="Event Trigger" points="519.7106666666667,749.9250000000001 519.7106666666668,791.7 89.04000000000019,791.7 89.04000000000019,231.80000000000007 1141.4518888888892,231.80000000000007 1141.4518888888888,329.80000000000007 1507.6103888888888,329.80000000000007 1507.6103888888888,341.80000000000007" fill="none" stroke="var(--_line)" stroke-width="1" stroke-dasharray="4 4" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Q_ACCESS" data-to="TASK_STORAGE" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="898.6309999999999,733.0250000000001 898.6309999999999,799.3625000000001 944.5554166666664,799.3625000000001 944.5554166666664,865.7" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="Q_LOGS" data-to="TASK_STORAGE" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="1093.81,733.0250000000001 1093.81,799.3625000000001 944.5554166666664,799.3625000000001 944.5554166666664,865.7" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="TASK_STORAGE" data-to="MUTEX_SPI" data-style="solid" data-arrow-start="true" data-arrow-end="true" data-label="Bus Arbitration" points="915.5807499999997,919.5 915.5807499999996,965.5 1699.542,965.5 1699.542,581.9000000000001 1395.386583333333,581.9000000000001 1395.386583333333,679.9000000000001 1486.0204999999996,679.9000000000001 1486.0204999999996,696.1250000000001" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" marker-start="url(#arrowhead-start)" />
+<polyline class="edge" data-from="TASK_CLI" data-to="MUTEX_DB" data-style="solid" data-arrow-start="true" data-arrow-end="true" data-label="Inspect Occupants" points="771.682083333333,919.5 771.682083333333,953.5 1598.574,953.5 1598.574,593.9000000000001 1405.386583333333,593.9000000000001 1405.386583333333,667.9000000000001 1314.7526666666663,667.9000000000001 1314.7526666666663,696.1250000000001" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" marker-start="url(#arrowhead-start)" />
+<polyline class="edge" data-from="TASK_ENTRANCE" data-to="SERVO_IN_HW" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="1661.5596666666665,395.6 1661.5596666666665,521.9000000000001 1793.8366666666666,521.9000000000001 1793.8366666666666,989.5 1542.53,989.5 1542.53,1063.5" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="TASK_ENTRANCE" data-to="SERVO_OUT_HW" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="1680.4644444444443,395.6 1680.4644444444443,501.6 1834.2986666666666,501.6 1834.2986666666666,1001.5 1708.069,1001.5 1708.069,1063.5" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="TASK_ENTRANCE" data-to="LED_PASS_HW" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="1756.0835555555554,395.6 1756.0835555555554,453.6 2104.862666666667,453.6 2104.862666666667,989.5 1881.018,989.5 1881.0179999999998,1063.5" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="TASK_ENTRANCE" data-to="LED_FAIL_HW" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="1774.9883333333332,395.6 1774.9883333333332,441.6 2199.3191666666667,441.6 2199.3191666666667,1001.5 2056.931,1001.5 2056.931,1063.5" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="TASK_ENTRANCE" data-to="BUZZER_HW" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="1793.893111111111,395.6 1793.893111111111,429.6 2285.0689166666666,429.6 2285.0689166666666,1001.5 2215.4305,1001.5 2215.4305,1063.5" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="TASK_R1" data-to="RELAY_R1_HW" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="1175.2395555555554,395.6 1175.2395555555556,501.6 316.54399999999987,501.6 316.54399999999987,1001.5 621.0985000000001,1001.5 621.0984999999998,1063.5" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="TASK_R2" data-to="RELAY_R2_HW" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="1567.0795555555555,395.6 1567.0795555555555,533.9000000000001 1749.378,533.9000000000001 1749.378,977.5 1363.2824999999998,977.5 1363.2824999999998,1063.5" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="TASK_STORAGE" data-to="SD_HW" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="973.5300833333331,919.5 973.530083333333,1001.5 1165.1395000000002,1001.5 1165.1395000000002,1063.5" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="TASK_CLI" data-to="UART_TXD" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="713.7327499999997,919.5 713.7327499999997,977.5 965.1440000000001,977.5 965.1440000000001,1063.5" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<polyline class="edge" data-from="TASK_HB" data-to="LED_HB_HW" data-style="solid" data-arrow-start="false" data-arrow-end="true" points="553.4564166666663,919.5 553.4564166666663,989.5 791.0835000000002,989.5 791.0835000000002,1063.5" fill="none" stroke="var(--_line)" stroke-width="1" marker-end="url(#arrowhead)" />
+<g class="edge-label" data-from="EMERG_ISR" data-to="EVT_GRP" data-label="Assert FLAG_EMERGENCY">
+  <rect x="466.59183333333294" y="532.6" width="151.89399999999998" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="542.538833333333" y="547.75" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Assert FLAG_EMERGENCY</text>
+</g>
+<g class="edge-label" data-from="TASK_ENTRANCE" data-to="MUTEX_DB" data-label="Atomic Mutex">
+  <rect x="1913.438666666667" y="520.6" width="79.42600000000002" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="1953.1516666666669" y="535.75" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Atomic Mutex</text>
+</g>
+<g class="edge-label" data-from="TASK_ENTRANCE" data-to="Q_ACCESS" data-label="Post Event">
+  <rect x="1841.2986666666666" y="508.6" width="68.14" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="1875.3686666666665" y="523.75" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Post Event</text>
+</g>
+<g class="edge-label" data-from="TASK_ENTRANCE" data-to="Q_LOGS" data-label="Post Audit Record">
+  <rect x="1996.8646666666668" y="532.6" width="101.99800000000002" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="2047.8636666666669" y="547.75" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Post Audit Record</text>
+</g>
+<g class="edge-label" data-from="TASK_R1" data-to="Q_TELEM" data-label="Post Telemetry">
+  <rect x="222.20799999999963" y="556.6000000000001" width="88.33600000000001" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="266.37599999999964" y="571.7500000000001" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Post Telemetry</text>
+</g>
+<g class="edge-label" data-from="TASK_R2" data-to="Q_TELEM" data-label="Post Telemetry">
+  <rect x="689.4086666666665" y="532.6" width="88.33600000000001" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="733.5766666666665" y="547.75" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Post Telemetry</text>
+</g>
+<g class="edge-label" data-from="EVT_GRP" data-to="TASK_R1" data-label="Event Trigger">
+  <rect x="134.62400000000002" y="742.4000000000001" width="83.58400000000002" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="176.41600000000003" y="757.5500000000001" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Event Trigger</text>
+</g>
+<g class="edge-label" data-from="EVT_GRP" data-to="TASK_R2" data-label="Event Trigger">
+  <rect x="47.040000000000184" y="754.4000000000001" width="83.58400000000002" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="88.83200000000019" y="769.5500000000001" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Event Trigger</text>
+</g>
+<g class="edge-label" data-from="TASK_STORAGE" data-to="MUTEX_SPI" data-label="Bus Arbitration">
+  <rect x="1655.042" y="928.2" width="88.33600000000003" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="1699.21" y="943.35" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Bus Arbitration</text>
+</g>
+<g class="edge-label" data-from="TASK_CLI" data-to="MUTEX_DB" data-label="Inspect Occupants">
+  <rect x="1546.074" y="916.2" width="104.96800000000002" height="30.3" rx="2" ry="2" fill="var(--bg)" stroke="var(--_inner-stroke)" stroke-width="1" />
+  <text x="1598.558" y="931.35" text-anchor="middle" font-size="11" font-weight="400" fill="var(--_text-sec)" dy="3.8499999999999996">Inspect Occupants</text>
+</g>
+<g class="node" data-id="EMERG_BTN" data-label="Emergency Button
+(GPIO 32 - ISR)" data-shape="rectangle">
+  <rect x="957.5787777777779" y="84" width="149.39499999999998" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1032.276277777778" y="110.9" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="1032.276277777778" dy="-3.9000000000000012">Emergency Button</tspan><tspan x="1032.276277777778" dy="16.900000000000002">(GPIO 32 - ISR)</tspan></text>
+</g>
+<g class="node" data-id="TAP_IN" data-label="Entry Tap / RFID
+(GPIO 26 / SPI)" data-shape="rectangle">
+  <rect x="1403.066777777778" y="84" width="138.28" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1472.2067777777781" y="110.9" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="1472.2067777777781" dy="-3.9000000000000012">Entry Tap / RFID</tspan><tspan x="1472.2067777777781" dy="16.900000000000002">(GPIO 26 / SPI)</tspan></text>
+</g>
+<g class="node" data-id="TAP_OUT" data-label="Exit Tap / RFID
+(GPIO 12 / SPI)" data-shape="rectangle">
+  <rect x="1700.0587777777778" y="84" width="127.90599999999999" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1764.0117777777778" y="110.9" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="1764.0117777777778" dy="-3.9000000000000012">Exit Tap / RFID</tspan><tspan x="1764.0117777777778" dy="16.900000000000002">(GPIO 12 / SPI)</tspan></text>
+</g>
+<g class="node" data-id="PIR1_HW" data-label="Room 1 PIR
+(GPIO 14)" data-shape="rectangle">
+  <rect x="1569.3467777777778" y="84" width="102.712" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1620.7027777777778" y="110.9" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="1620.7027777777778" dy="-3.9000000000000012">Room 1 PIR</tspan><tspan x="1620.7027777777778" dy="16.900000000000002">(GPIO 14)</tspan></text>
+</g>
+<g class="node" data-id="LDR1_HW" data-label="Room 1 LDR
+(GPIO 34 ADC1)" data-shape="rectangle">
+  <rect x="801.6727777777779" y="84" width="127.90599999999999" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="865.6257777777779" y="110.9" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="865.6257777777779" dy="-3.9000000000000012">Room 1 LDR</tspan><tspan x="865.6257777777779" dy="16.900000000000002">(GPIO 34 ADC1)</tspan></text>
+</g>
+<g class="node" data-id="PIR2_HW" data-label="Room 2 PIR
+(GPIO 27)" data-shape="rectangle">
+  <rect x="1134.9737777777777" y="84" width="107.158" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1188.5527777777777" y="110.9" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="1188.5527777777777" dy="-3.9000000000000012">Room 2 PIR</tspan><tspan x="1188.5527777777777" dy="16.900000000000002">(GPIO 27)</tspan></text>
+</g>
+<g class="node" data-id="LDR2_HW" data-label="Room 2 LDR
+(GPIO 35 ADC1)" data-shape="rectangle">
+  <rect x="1855.9647777777777" y="84" width="127.90599999999999" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1919.9177777777777" y="110.9" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="1919.9177777777777" dy="-3.9000000000000012">Room 2 LDR</tspan><tspan x="1919.9177777777777" dy="16.900000000000002">(GPIO 35 ADC1)</tspan></text>
+</g>
+<g class="node" data-id="UART_RXD" data-label="UART0 RX
+(GPIO 3)" data-shape="rectangle">
+  <rect x="1270.1317777777779" y="84" width="104.93499999999999" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1322.5992777777778" y="110.9" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="1322.5992777777778" dy="-3.9000000000000012">UART0 RX</tspan><tspan x="1322.5992777777778" dy="16.900000000000002">(GPIO 3)</tspan></text>
+</g>
+<g class="node" data-id="EMERG_ISR" data-label="Emergency ISR
+(Immediate Context Switch)" data-shape="rectangle">
+  <rect x="1250.814888888889" y="341.8" width="193.11399999999998" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1347.371888888889" y="368.7" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="1347.371888888889" dy="-3.9000000000000012">Emergency ISR</tspan><tspan x="1347.371888888889" dy="16.900000000000002">(Immediate Context Switch)</tspan></text>
+</g>
+<g class="node" data-id="TASK_ENTRANCE" data-label="TaskEntrance
+(Priority 5 - Real-Time)" data-shape="rectangle">
+  <rect x="1642.6548888888888" y="341.8" width="170.14299999999997" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1727.7263888888888" y="368.7" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="1727.7263888888888" dy="-3.9000000000000012">TaskEntrance</tspan><tspan x="1727.7263888888888" dy="16.900000000000002">(Priority 5 - Real-Time)</tspan></text>
+</g>
+<g class="node" data-id="TASK_R1" data-label="TaskRoom1
+(Priority 4 - 50ms)" data-shape="rectangle">
+  <rect x="1080.088888888889" y="341.8" width="142.726" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1151.451888888889" y="368.7" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="1151.451888888889" dy="-3.9000000000000012">TaskRoom1</tspan><tspan x="1151.451888888889" dy="16.900000000000002">(Priority 4 - 50ms)</tspan></text>
+</g>
+<g class="node" data-id="TASK_R2" data-label="TaskRoom2
+(Priority 4 - 50ms)" data-shape="rectangle">
+  <rect x="1471.9288888888889" y="341.8" width="142.726" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1543.291888888889" y="368.7" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="1543.291888888889" dy="-3.9000000000000012">TaskRoom2</tspan><tspan x="1543.291888888889" dy="16.900000000000002">(Priority 4 - 50ms)</tspan></text>
+</g>
+<g class="node" data-id="EVT_GRP" data-label="xEventGroupSystem
+(EMERGENCY | CURFEW | LOCKOUT)" data-shape="rectangle">
+  <rect x="343.54400000000004" y="696.1250000000001" width="264.2499999999999" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="475.669" y="723.0250000000001" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="475.669" dy="-3.9000000000000012">xEventGroupSystem</tspan><tspan x="475.669" dy="16.900000000000002">(EMERGENCY | CURFEW | LOCKOUT)</tspan></text>
+</g>
+<g class="node" data-id="Q_ACCESS" data-label="xQueueAccessEvents" data-shape="rectangle">
+  <rect x="810.9659999999999" y="696.1250000000001" width="175.32999999999998" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="898.6309999999999" y="714.5750000000002" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">xQueueAccessEvents</text>
+</g>
+<g class="node" data-id="Q_TELEM" data-label="xQueueTelemetry" data-shape="rectangle">
+  <rect x="635.7939999999999" y="696.1250000000001" width="147.17200000000003" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="709.3799999999999" y="714.5750000000002" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">xQueueTelemetry</text>
+</g>
+<g class="node" data-id="Q_LOGS" data-label="xQueueLogStorage" data-shape="rectangle">
+  <rect x="1014.296" y="696.1250000000001" width="159.028" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1093.81" y="714.5750000000002" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">xQueueLogStorage</text>
+</g>
+<g class="node" data-id="MUTEX_SPI" data-label="xSemaphoreSpiMutex" data-shape="rectangle">
+  <rect x="1399.4669999999999" y="696.1250000000001" width="173.107" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1486.0204999999999" y="714.5750000000002" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">xSemaphoreSpiMutex</text>
+</g>
+<g class="node" data-id="MUTEX_DB" data-label="xSemaphoreDbMutex" data-shape="rectangle">
+  <rect x="1201.3239999999998" y="696.1250000000001" width="170.14299999999997" height="36.900000000000006" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1286.3954999999999" y="714.5750000000002" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)" dy="4.55">xSemaphoreDbMutex</text>
+</g>
+<g class="node" data-id="TASK_STORAGE" data-label="TaskStorage
+(Priority 3 - FATFS I/O)" data-shape="rectangle">
+  <rect x="857.6314166666664" y="865.7" width="173.84799999999998" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="944.5554166666664" y="892.6" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="944.5554166666664" dy="-3.9000000000000012">TaskStorage</tspan><tspan x="944.5554166666664" dy="16.900000000000002">(Priority 3 - FATFS I/O)</tspan></text>
+</g>
+<g class="node" data-id="TASK_CLI" data-label="TaskCLI
+(Priority 2 - Interactive)" data-shape="rectangle">
+  <rect x="655.7834166666663" y="865.7" width="173.848" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="742.7074166666663" y="892.6" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="742.7074166666663" dy="-3.9000000000000012">TaskCLI</tspan><tspan x="742.7074166666663" dy="16.900000000000002">(Priority 2 - Interactive)</tspan></text>
+</g>
+<g class="node" data-id="TASK_HB" data-label="TaskHeartbeat
+(Priority 1 - 1000ms)" data-shape="rectangle">
+  <rect x="479.1294166666663" y="865.7" width="148.654" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="553.4564166666663" y="892.6" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="553.4564166666663" dy="-3.9000000000000012">TaskHeartbeat</tspan><tspan x="553.4564166666663" dy="16.900000000000002">(Priority 1 - 1000ms)</tspan></text>
+</g>
+<g class="node" data-id="SERVO_IN_HW" data-label="Entry Servo Gate
+(GPIO 13 - PWM)" data-shape="rectangle">
+  <rect x="1471.1670000000001" y="1063.5" width="142.726" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1542.5300000000002" y="1090.4" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="1542.5300000000002" dy="-3.9000000000000012">Entry Servo Gate</tspan><tspan x="1542.5300000000002" dy="16.900000000000002">(GPIO 13 - PWM)</tspan></text>
+</g>
+<g class="node" data-id="SERVO_OUT_HW" data-label="Exit Servo Gate
+(GPIO 15 - PWM)" data-shape="rectangle">
+  <rect x="1641.8930000000003" y="1063.5" width="132.352" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1708.0690000000002" y="1090.4" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="1708.0690000000002" dy="-3.9000000000000012">Exit Servo Gate</tspan><tspan x="1708.0690000000002" dy="16.900000000000002">(GPIO 15 - PWM)</tspan></text>
+</g>
+<g class="node" data-id="LED_PASS_HW" data-label="Granted Green LED
+(GPIO 2)" data-shape="rectangle">
+  <rect x="1802.2450000000001" y="1063.5" width="157.546" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1881.018" y="1090.4" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="1881.018" dy="-3.9000000000000012">Granted Green LED</tspan><tspan x="1881.018" dy="16.900000000000002">(GPIO 2)</tspan></text>
+</g>
+<g class="node" data-id="LED_FAIL_HW" data-label="Denied Red LED
+(GPIO 4)" data-shape="rectangle">
+  <rect x="1987.7910000000002" y="1063.5" width="138.27999999999997" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="2056.931" y="1090.4" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="2056.931" dy="-3.9000000000000012">Denied Red LED</tspan><tspan x="2056.931" dy="16.900000000000002">(GPIO 4)</tspan></text>
+</g>
+<g class="node" data-id="BUZZER_HW" data-label="Alarm Buzzer
+(GPIO 25)" data-shape="rectangle">
+  <rect x="2154.071" y="1063.5" width="122.71900000000001" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="2215.4305" y="1090.4" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="2215.4305" dy="-3.9000000000000012">Alarm Buzzer</tspan><tspan x="2215.4305" dy="16.900000000000002">(GPIO 25)</tspan></text>
+</g>
+<g class="node" data-id="RELAY_R1_HW" data-label="Room 1 Lights Relay
+(GPIO 16)" data-shape="rectangle">
+  <rect x="543.4370000000001" y="1063.5" width="155.32299999999998" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="621.0985000000001" y="1090.4" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="621.0985000000001" dy="-3.9000000000000012">Room 1 Lights Relay</tspan><tspan x="621.0985000000001" dy="16.900000000000002">(GPIO 16)</tspan></text>
+</g>
+<g class="node" data-id="RELAY_R2_HW" data-label="Room 2 Lights Relay
+(GPIO 17)" data-shape="rectangle">
+  <rect x="1283.3980000000001" y="1063.5" width="159.769" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1363.2825000000003" y="1090.4" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="1363.2825000000003" dy="-3.9000000000000012">Room 2 Lights Relay</tspan><tspan x="1363.2825000000003" dy="16.900000000000002">(GPIO 17)</tspan></text>
+</g>
+<g class="node" data-id="SD_HW" data-label="MicroSD Card (FATFS)
+(VSPI - GPIO 5)" data-shape="rectangle">
+  <rect x="1074.881" y="1063.5" width="180.51699999999997" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="1165.1395" y="1090.4" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="1165.1395" dy="-3.9000000000000012">MicroSD Card (FATFS)</tspan><tspan x="1165.1395" dy="16.900000000000002">(VSPI - GPIO 5)</tspan></text>
+</g>
+<g class="node" data-id="UART_TXD" data-label="UART0 TX (Console)
+(GPIO 1)" data-shape="rectangle">
+  <rect x="883.4070000000002" y="1063.5" width="163.474" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="965.1440000000001" y="1090.4" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="965.1440000000001" dy="-3.9000000000000012">UART0 TX (Console)</tspan><tspan x="965.1440000000001" dy="16.900000000000002">(GPIO 1)</tspan></text>
+</g>
+<g class="node" data-id="LED_HB_HW" data-label="Heartbeat LED
+(GPIO 21)" data-shape="rectangle">
+  <rect x="726.7600000000002" y="1063.5" width="128.647" height="53.800000000000004" rx="0" ry="0" fill="var(--_node-fill)" stroke="var(--_node-stroke)" stroke-width="0.75" />
+  <text x="791.0835000000002" y="1090.4" text-anchor="middle" font-size="13" font-weight="500" fill="var(--_text)"><tspan x="791.0835000000002" dy="-3.9000000000000012">Heartbeat LED</tspan><tspan x="791.0835000000002" dy="16.900000000000002">(GPIO 21)</tspan></text>
+</g>
+</svg>

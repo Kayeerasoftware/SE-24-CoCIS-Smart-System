@@ -91,6 +91,7 @@ static void execute_cli_command(char *cmd_line) {
         printf("  schedule set <SH:SM> <EH:EM> - Update access hours (e.g. schedule set 07:00 20:00)\r\n");
         printf("  curfew <on|off>              - Enforce after-hours curfew lockdown\r\n");
         printf("  emergency <on|off>           - Force global evacuation gates and lights override\r\n");
+        printf("  reboot                       - Perform a clean hardware/software system restart\r\n");
         printf("  logs                         - View recent security audit logs\r\n");
     }
     else if (strcmp(cmd, "status") == 0) {
@@ -210,6 +211,16 @@ static void execute_cli_command(char *cmd_line) {
             } else {
                 trigger_emergency_evacuation(false, "ADMIN_CLI");
             }
+        }
+    }
+    else if (strcmp(cmd, "reboot") == 0) {
+        if (!s_is_admin_logged_in) {
+            printf("\r\n\033[1;31mError: Unauthorized. Admin login required.\033[0m\r\n");
+        } else {
+            printf("\r\n\033[1;33m[SYSTEM] Initiating clean ESP32 software reboot...\033[0m\r\n");
+            fflush(stdout);
+            vTaskDelay(pdMS_TO_TICKS(500));
+            esp_restart();
         }
     }
     else if (strcmp(cmd, "logs") == 0) {
